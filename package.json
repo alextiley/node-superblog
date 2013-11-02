@@ -1,0 +1,20 @@
+{
+	"name": "node-blog",
+	"description": "A basic blogging application written with node js",
+	"version": "0.0.1",
+	"private": false,
+	"dependencies": {
+		"express": "latest",
+		"mongoose": "latest",
+		"connect-mongo": "latest",
+		"jade": "latest",
+		"passport": "latest"
+	},
+	"devDependencies": {
+		"nodemon": "latest"
+	},
+	"repository" : {
+		"type" : "git",
+		"url" : "https://github.com/alextiley/node-blog.git"
+	}
+}

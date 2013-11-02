@@ -1,0 +1,15 @@
+extend /layouts/default
+
+block title
+	title Internal server error (500) | SuperBlog
+
+block content
+	.row
+		.large-12.columns
+			h2 Internal server error (500)
+			p Sorry, but somebody has broken the site. Please forward the message below to somebody important:
+			if error.msg
+				pre #{error.msg}
+				hr
+			if error.stack
+				pre #{error.stack}

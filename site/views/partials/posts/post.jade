@@ -1,0 +1,7 @@
+hr
+h3.subheader #{post.title}
+small.subheader Written by #{post.author} on #{post.created}. Last edited on #{post.modified}
+p #{post.summary}
+small Liked #{post.meta.likes} times.
+each tag in post.meta.tags
+	include /partials/posts/tags

@@ -1,0 +1,25 @@
+extend /layouts/default
+
+block title
+	title All blog posts | SuperBlog
+
+block content
+	.row
+		.large-12.columns
+
+			h2 All Posts
+
+			if posts
+				if paging
+					p You are currently viewing #{paging.firstItem} - #{paging.lastItem} of #{paging.totalResults} blog posts.
+					include /partials/global/paging
+
+				each post in posts
+					include /partials/posts/post
+
+				if paging
+					hr
+					include /partials/global/paging
+
+			else
+				p There are currently no posts to display!

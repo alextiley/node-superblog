@@ -1,0 +1,15 @@
+extend /layouts/default
+
+block title
+	title Access denied (403) | SuperBlog
+
+block content
+	.row
+		.large-12.columns
+			h2 Access denied (403)
+			p You're not allowed to access to this page. If you think this is wrong, please forward the message below to somebody important:
+			if error.msg
+				pre #{error.msg}
+				hr
+			if error.stack
+				pre #{error.stack}
