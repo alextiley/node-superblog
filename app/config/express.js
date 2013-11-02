@@ -16,7 +16,7 @@ module.exports = function () {
 
 	// Configure the current context (site or admin)
 	app.use(function (request, response, next) {
-		if (/(^\/admin\/)/.test(request.url)) {
+		if (/(^\/admin)(\/)?/.test(request.url)) {
 			app.enable('admin');
 			app.disable('site');
 		} else {
@@ -102,19 +102,19 @@ module.exports = function () {
 
 	// Page not found (404)
 	// ---- next() will trigger a 404 as no routes match after this
-	app.get(/^(\/404|\/admin\/404)$/, function (request, response, next) {
+	app.get(/^\/(admin\/)?404(\/)?$/, function (request, response, next) {
 		next();
 	});
 
 	// Access denied (403)
-	app.get(/^(\/403|\/admin\/403)$/, function (request, response, next) {
+	app.get(/^\/(admin\/)?403(\/)?$/, function (request, response, next) {
 		var error = new Error('Access denied!');
 		error.status = 403;
 		next(error);
 	});
 
 	// Internal server error (500)
-	app.get(/^(\/500|\/admin\/500)$/, function (request, response, next) {
+	app.get(/^\/(admin\/)?500(\/)?$/, function (request, response, next) {
 		var error = new Error('You\'ve requested the error page. Doh!');
 		error.status = 500;
 		next(error);
