@@ -81,7 +81,7 @@ module.exports = function () {
 	}));
 
 	// Set the assets path
-	app.use('/', express.static(app.get('paths').site.assets));
+	app.use('/site', express.static(app.get('paths').site.assets));
 	app.use('/admin', express.static(app.get('paths').assets));
 
 	// Include common view data, invoked on all route requests
