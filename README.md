@@ -1,11 +1,10 @@
 
-node-blog
-=========
+node-superblog
+==============
 
-A basic blog written with node.js
+A basic blog written with node.js.
 
-todo
-----
+Need to complete the following:
 
 * Admin: login
 * Admin: Author CRUD
