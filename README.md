@@ -2,7 +2,7 @@
 node-superblog
 ==============
 
-A basic blog written with node.js.
+A blog application written with node.js, complete with an admin interface.
 
 Need to complete the following:
 

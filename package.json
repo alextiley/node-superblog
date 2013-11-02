@@ -1,6 +1,6 @@
 {
 	"name": "node-superblog",
-	"description": "A basic blogging application written with node js",
+	"description": "A blog application written with node.js, complete with an admin interface.",
 	"version": "0.0.1",
 	"private": false,
 	"dependencies": {
