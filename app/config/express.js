@@ -82,6 +82,9 @@ module.exports = function () {
 
 	// Passport authentication module
 	require(app.get('paths').config + 'passport')();
+	
+	app.use(passport.initialize());
+	app.use(passport.session());
 
 	// Set the assets path
 	app.use('/site', express.static(app.get('paths').site.assets));
