@@ -1,11 +1,10 @@
-var constants = require(app.get('paths').utils + 'constants'),
-	pkg = require(app.get('paths').root + 'package.json'),
-	utils = require(app.get('paths').utils + 'app')(),
-	express = require('express'),
-	mongoStore = require('connect-mongo')(express),
-	passport = require('passport');
-
 module.exports = function () {
+
+	var express = require('express'),
+		mongoStore = require('connect-mongo')(express),
+		utils = require(app.get('paths').utils + 'app')(),
+		pkg = require(app.get('paths').root + 'package.json'),
+		constants = require(app.get('paths').utils + 'constants');
 
 	// Development-specific configuration
 	app.configure('development', function () {
@@ -82,8 +81,7 @@ module.exports = function () {
 	}));
 
 	// Passport authentication module
-	app.use(passport.initialize());
-	app.use(passport.session());
+	require(app.get('paths').config + 'passport')();
 
 	// Set the assets path
 	app.use('/site', express.static(app.get('paths').site.assets));
