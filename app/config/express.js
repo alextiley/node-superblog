@@ -2,6 +2,7 @@ module.exports = function () {
 
 	var express = require('express'),
 		passport = require('passport'),
+		flash = require('connect-flash'),
 		mongoStore = require('connect-mongo')(express),
 		utils = require(app.get('paths').utils + 'app')(),
 		pkg = require(app.get('paths').root + 'package.json'),
@@ -80,6 +81,9 @@ module.exports = function () {
 			url: app.get('db').url
 		})
 	}));
+
+	// Enable flash message middleware
+	app.use(flash());
 
 	// Passport authentication module
 	require(app.get('paths').config + 'passport')(passport);
