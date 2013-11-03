@@ -8,7 +8,8 @@
 		"mongoose": "latest",
 		"connect-mongo": "latest",
 		"jade": "latest",
-		"passport": "latest"
+		"passport": "latest",
+		"passport-local": "latest"
 	},
 	"devDependencies": {
 		"nodemon": "latest"

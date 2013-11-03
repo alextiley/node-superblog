@@ -2,7 +2,8 @@ var constants = require(app.get('paths').utils + 'constants'),
 	pkg = require(app.get('paths').root + 'package.json'),
 	utils = require(app.get('paths').utils + 'app')(),
 	express = require('express'),
-	mongoStore = require('connect-mongo')(express);
+	mongoStore = require('connect-mongo')(express),
+	passport = require('passport');
 
 module.exports = function () {
 
@@ -79,6 +80,10 @@ module.exports = function () {
 			url: app.get('db').url
 		})
 	}));
+
+	// Passport authentication module
+	app.use(passport.initialize());
+	app.use(passport.session());
 
 	// Set the assets path
 	app.use('/site', express.static(app.get('paths').site.assets));
