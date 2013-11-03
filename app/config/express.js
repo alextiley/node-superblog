@@ -1,6 +1,7 @@
 module.exports = function () {
 
 	var express = require('express'),
+		passport = require('passport'),
 		mongoStore = require('connect-mongo')(express),
 		utils = require(app.get('paths').utils + 'app')(),
 		pkg = require(app.get('paths').root + 'package.json'),
@@ -81,8 +82,8 @@ module.exports = function () {
 	}));
 
 	// Passport authentication module
-	require(app.get('paths').config + 'passport')();
-	
+	require(app.get('paths').config + 'passport')(passport);
+
 	app.use(passport.initialize());
 	app.use(passport.session());
 

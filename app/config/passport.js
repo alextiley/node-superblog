@@ -1,7 +1,6 @@
-module.exports = function () {
+module.exports = function (passport) {
 	
-	var passport = require('passport'),
-		LocalStrategy = require('passport-local').Strategy,
+	var LocalStrategy = require('passport-local').Strategy,
 		Administrator = require(app.get('paths').models + 'Administrator').Administrator;
 		
 	// Persistent login sessions
