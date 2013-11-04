@@ -8,7 +8,7 @@ module.exports.controller = function () {
 	});
 
 	app.get(/^\/admin\/login\/?$/, function (request, response, next) {
-		passportUtils.authAdminUser(request, response, next, {
+		passportUtils.authoriseAdmin(request, response, next, {
 			success: function (user) {
 				response.redirect('/admin/dashboard');
 			},
@@ -25,7 +25,7 @@ module.exports.controller = function () {
 	});
 
 	app.post(/^\/admin\/login\/?$/, function (request, response, next) {
-		passportUtils.authAdminUser(request, response, next, {
+		passportUtils.authoriseAdmin(request, response, next, {
 			success: function (user) {
 				request.flash('success', 'Welcome ' + user.name + '! You have successfully logged in.');
 				response.redirect('/admin/dashboard');

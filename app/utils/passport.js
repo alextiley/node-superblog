@@ -1,9 +1,10 @@
 var passport = require('passport'),
 	utils = {};
 
-utils.authAdminUser = function (request, response, next, callbacks) {
-	
+utils.authoriseAdmin = function (request, response, next, callbacks) {
+	console.log('authoriseAdmin invoked...');
 	passport.authenticate('local', function (error, user, info) {
+		console.log(error, user, info);
 		if (error) {
 			return next(error);
 		}

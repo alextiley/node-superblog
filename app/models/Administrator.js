@@ -9,8 +9,9 @@ var mongo = require('mongoose'),
 // Define the schema
 AdministratorSchema = new Schema({
 	username: String,
-	hash: String,
-	salt: String,
+	password: String,
+	//hash: String, // @todo: encryption
+	//salt: String, // @todo: encryption
 	email: String,
 	name: String,
 	surname: String,
@@ -26,27 +27,27 @@ AdministratorSchema = new Schema({
 	}
 });
 
-AdministratorSchema.statics.getById = function (userId, request, response, callback) {
+AdministratorSchema.statics.getById = function (id, request, response, callback) {
 
-	var rules = { id: userId };
+	var rules = { id: id };
 
-	this.findOne(rules).exec(function (error, adminUser) {
-		if (adminUser) {
-			callback.call(adminUser, adminUser);
+	this.findOne(rules).exec(function (error, administrator) {
+		if (administrator) {
+			callback.call(administrator, administrator);
 		} else {
-			utils.renderErrorPage(error, request, response, 'Get administrator by userId query failed.');
+			utils.renderErrorPage(error, request, response, 'Get administrator by id query failed.');
 		}
 	});
 
 };
 
 AdministratorSchema.statics.getByUsername = function (username, request, response, callback) {
-
+	
 	var rules = { username: username };
 
-	this.findOne(rules).exec(function (error, adminUser) {
-		if (adminUser) {
-			callback.call(adminUser, adminUser);
+	this.findOne(rules).exec(function (error, administrator) {
+		if (administrator) {
+			callback.call(administrator, administrator);
 		} else {
 			utils.renderErrorPage(error, request, response, 'Get administrator by username query failed.');
 		}
