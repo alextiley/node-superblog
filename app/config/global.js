@@ -18,7 +18,12 @@ module.exports = function (baseDir) {
 			assets: baseDir + '/site/views/assets/'
 		},
 		shared: {
-			models: baseDir + '/shared/models/'
+			utils: baseDir + '/shared/utils/',
+			config: baseDir + '/shared/config/',
+			models: baseDir + '/shared/models/',
+			views: baseDir + '/shared/views/',
+			controllers: baseDir + '/shared/controllers/',
+			assets: baseDir + '/shared/views/assets/'
 		}
 	});
 
