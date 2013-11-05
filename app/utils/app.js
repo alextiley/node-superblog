@@ -55,6 +55,12 @@ function utils () {
 		locals.common = {};
 		locals.common[constants.PAGE_ID] = utils.getPageIdFromViewPath(view);
 		locals.common[constants.BODY_CLASSES] = utils.getHtmlBodyClasses(request, view);
+
+		locals.messages = {
+			success: request.flash('success'),
+			errors: request.flash('error'),
+			info: request.flash('info')
+		};
 		
 		if (app.enabled('site')) {
 			// site specific
@@ -75,7 +81,7 @@ function utils () {
 	utils.renderErrorPage = function (error, request, response, msg) {
 
 		var status = (error.status || 500).toString();
-
+		console.log(error);
 		response.status(status);
 
 		if (msg !== undefined) {
@@ -86,7 +92,7 @@ function utils () {
 			page: constants.ERROR_PAGE_KEY,
 			error: error
 		});
-
+		
 		if (error.stack !== undefined) {
 			console.error(error.stack);
 		}

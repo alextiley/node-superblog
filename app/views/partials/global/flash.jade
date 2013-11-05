@@ -1,34 +1,34 @@
 //- Needs refactoring
 
-- if (errors !== undefined)
-	- if (errors.length > 0)
+- if (messages.errors !== undefined)
+	- if (messages.errors.length > 0)
 		.alert-box.alert
-			- if (errors.length === 1) {
-				.message #{errors[0]}
+			- if (messages.errors.length === 1) {
+				.message #{messages.errors[0]}
 			- } else {
 				ul.messages
-					each error in errors
+					each error in messages.errors
 						li #{error}
 			- }
 
-- if (info !== undefined)
-	- if (info.length > 0)
+- if (messages.info !== undefined)
+	- if (messages.info.length > 0)
 		.alert-box
-			- if (info.length === 1) {
-				.message #{info[0]}
+			- if (messages.info.length === 1) {
+				.message #{messages.info[0]}
 			- } else {
 				ul.messages
-					each message in info
+					each message in messages.info
 						li #{message}
 			- }
 
-- if (success !== undefined)
-	- if (success.length > 0)
+- if (messages.success !== undefined)
+	- if (messages.success.length > 0)
 		.alert-box.success
-			- if (success.length === 1) {
-				.message #{success[0]}
+			- if (messages.success.length === 1) {
+				.message #{messages.success[0]}
 			- } else {
 				ul.messages
-					each message in success
+					each message in messages.success
 						li #{message}
 			- }

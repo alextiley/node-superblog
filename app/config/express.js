@@ -76,6 +76,7 @@ module.exports = function () {
 
 	// Provides cookie-based sessions with mongo storage
 	app.use(express.session({
+		key: 'express.sid',
 		secret: app.get('cookies').secret,
 		store: new mongoStore ({
 			url: app.get('db').url

@@ -27,30 +27,22 @@ AdministratorSchema = new Schema({
 	}
 });
 
-AdministratorSchema.statics.getById = function (id, request, response, callback) {
+AdministratorSchema.statics.getById = function (id, callback) {
 
 	var rules = { id: id };
 
 	this.findOne(rules).exec(function (error, administrator) {
-		if (administrator) {
-			callback.call(administrator, administrator);
-		} else {
-			utils.renderErrorPage(error, request, response, 'Get administrator by id query failed.');
-		}
+		callback.call(administrator, error, administrator);
 	});
 
 };
 
-AdministratorSchema.statics.getByUsername = function (username, request, response, callback) {
+AdministratorSchema.statics.getByUsername = function (username, callback) {
 	
 	var rules = { username: username };
 
 	this.findOne(rules).exec(function (error, administrator) {
-		if (administrator) {
-			callback.call(administrator, administrator);
-		} else {
-			utils.renderErrorPage(error, request, response, 'Get administrator by username query failed.');
-		}
+		callback.call(administrator, error, administrator);
 	});
 
 };
