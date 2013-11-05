@@ -81,7 +81,7 @@ function utils () {
 	utils.renderErrorPage = function (error, request, response, msg) {
 
 		var status = (error.status || 500).toString();
-		console.log(error);
+
 		response.status(status);
 
 		if (msg !== undefined) {
