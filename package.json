@@ -12,6 +12,10 @@
 		"passport": "latest",
 		"passport-local": "latest"
 	},
+	"contributors": {
+		"name": "Alex Tiley",
+		"email": "alextiley@gmail.com"
+	},
 	"devDependencies": {
 		"nodemon": "latest"
 	},
