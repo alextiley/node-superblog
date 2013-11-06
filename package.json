@@ -15,6 +15,9 @@
 	"devDependencies": {
 		"nodemon": "latest"
 	},
+	"scripts": {
+		"start": "nodemon application.js"
+	},
 	"repository" : {
 		"type" : "git",
 		"url" : "https://github.com/alextiley/node-superblog.git"
