@@ -17,6 +17,9 @@ utils = require(app.get('paths').utils + 'app')();
 // Express configuration
 require(app.get('paths').config + 'express')();
 
+// Passport configuration
+require(app.get('paths').config + 'passport')();
+
 // Bootstrap database connection
 mongo.connect(app.get('db').url);
 

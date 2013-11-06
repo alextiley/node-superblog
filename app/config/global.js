@@ -5,6 +5,7 @@ module.exports = function (baseDir) {
 		root: baseDir + '/',
 		utils: baseDir + '/app/utils/',
 		config: baseDir + '/app/config/',
+		middleware: baseDir + '/app/config/middleware/',
 		models: baseDir + '/app/models/',
 		views: baseDir + '/app/views/',
 		controllers: baseDir + '/app/controllers/',

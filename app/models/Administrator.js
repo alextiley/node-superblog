@@ -29,7 +29,7 @@ AdministratorSchema = new Schema({
 
 AdministratorSchema.statics.getById = function (id, callback) {
 
-	var rules = { id: id };
+	var rules = { _id: id };
 
 	this.findOne(rules).exec(function (error, administrator) {
 		callback.call(administrator, error, administrator);

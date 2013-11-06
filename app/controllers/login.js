@@ -13,9 +13,6 @@ module.exports.controller = function () {
 				response.redirect('/admin/dashboard');
 			},
 			failure: function () {
-				if (request.query.redirect === 'true') {
-					request.flash('info', 'Please log in to continue.');
-				}
 				response.render('login');
 			}
 		});
@@ -27,7 +24,7 @@ module.exports.controller = function () {
 				request.flash('success', 'Welcome ' + user.name + '! You have successfully logged in.');
 				response.redirect('/admin/dashboard');
 			},
-			failure: function (user) {
+			failure: function () {
 				request.flash('error', 'Unable to login. Please supply a valid username and password.');
 				response.redirect('/admin/login');
 			}

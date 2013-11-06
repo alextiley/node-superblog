@@ -71,7 +71,7 @@ function utils () {
 		return locals;
 	};
 
-	/*	
+	/*
 	 *	Renders the 500 error template
 	 *
 	 *	error - the error object

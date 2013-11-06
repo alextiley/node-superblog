@@ -9,6 +9,7 @@ module.exports.controller = function () {
 				response.render('dashboard');
 			},
 			failure: function () {
+				request.flash('info', 'Please log in to continue.');
 				response.redirect('/admin/login');
 			}
 		});

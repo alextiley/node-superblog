@@ -6,7 +6,8 @@ module.exports = function () {
 		mongoStore = require('connect-mongo')(express),
 		utils = require(app.get('paths').utils + 'app')(),
 		pkg = require(app.get('paths').root + 'package.json'),
-		constants = require(app.get('paths').utils + 'constants');
+		constants = require(app.get('paths').utils + 'constants'),
+		render = require(app.get('paths').middleware + 'render');
 
 	// Development-specific configuration
 	app.configure('development', function () {
@@ -30,6 +31,13 @@ module.exports = function () {
 
 	// Set .jade as the default template extension
 	app.set('view engine', 'jade');
+
+	// Enable flash message middleware
+	app.use(flash());
+
+	// Set the assets path
+	app.use('/site', express.static(app.get('paths').site.assets));
+	app.use('/admin', express.static(app.get('paths').assets));
 
 	// Set the site's base directory
 	app.use('/', function (request, response, next) {
@@ -65,49 +73,29 @@ module.exports = function () {
 		next();
 	});
 
+	// Parse and populate cookie data to request.cookies
+	app.use(express.cookieParser());
+
 	// Automatically parse request bodies
 	app.use(express.bodyParser());
 	
 	// Allow HTTP method overrides (using _method hidden input)
 	app.use(express.methodOverride());
 
-	// Parse and populate cookie data to request.cookies
-	app.use(express.cookieParser());
-
 	// Provides cookie-based sessions with mongo storage
 	app.use(express.session({
-		key: 'express.sid',
 		secret: app.get('cookies').secret,
 		store: new mongoStore ({
 			url: app.get('db').url
 		})
 	}));
 
-	// Enable flash message middleware
-	app.use(flash());
-
-	// Passport authentication module
-	require(app.get('paths').config + 'passport')(passport);
-
+	// Enable passport authentication
 	app.use(passport.initialize());
 	app.use(passport.session());
 
-	// Set the assets path
-	app.use('/site', express.static(app.get('paths').site.assets));
-	app.use('/admin', express.static(app.get('paths').assets));
-
 	// Include common view data, invoked on all route requests
-	app.use(function (request, response, next) {
-		
-		var render = response.render;
-		
-		response.render = function (view, locals, callback) {
-			locals = utils.getCommonRouteData(view, locals, request, response);
-			render.call(response, view, locals, callback);
-		};
-
-		next();
-	});
+	app.use(render.overrideRender());
 
 	// Allows mounting of roots
 	app.use(app.router);
@@ -157,6 +145,7 @@ module.exports = function () {
 
 	// Middleware to call when errors are present
 	app.use(function(error, request, response, next) {
+		render.overrideErrorRender(error, request, response);
 		utils.renderErrorPage(error, request, response);
 	});
 
