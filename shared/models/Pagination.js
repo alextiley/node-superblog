@@ -91,4 +91,4 @@ Pagination.prototype.getPageUrl = function (page, results) {
 	return requestUrl;
 }
 
-module.exports.Pagination = Pagination;
+module.exports = Pagination;

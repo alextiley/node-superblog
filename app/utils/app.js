@@ -36,7 +36,9 @@ function utils () {
 
 		var classes = utils.getPageIdFromViewPath(view);
 
-		// @todo: check request for login status and send back relevant classname
+		// Todo: output role name when multiple roles exist
+		classes += app.enabled('site') ? ' site' : ' admin';
+		classes += request.isAuthenticated() ? ' logged_in' : '';
 
 		return classes;
 	};

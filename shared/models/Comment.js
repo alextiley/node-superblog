@@ -40,4 +40,4 @@ CommentSchema = new Schema({
 // Define the model
 CommentModel = db.model('Comment', CommentSchema);
 
-module.exports.Comment = CommentModel;
+module.exports = CommentModel;

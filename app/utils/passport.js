@@ -30,9 +30,13 @@ utils.ensureAuthenticated = function (request, callbacks) {
 	if (isAuthorised) {
 		callbacks.success.call()
 	} else {
-		callbacks.failure.call();
+		if (typeof callbacks.failure === 'function') {
+			callbacks.failure.call();
+		} else {
+			request.flash('info', 'Please log in to continue.');
+			response.redirect('/admin/login');
+		}
 	}
-	
 }
 
 module.exports = utils;

@@ -1,0 +1,17 @@
+extends /layouts/default
+
+block title
+	title Administrator Accounts | SuperBlog Admin
+
+block content
+	.row
+		.large-12.columns
+			
+			h2 Administrator Accounts
+
+			include /partials/global/flash
+			
+			if administrators
+				p Displaying administrator accounts:
+			else
+				p There are no administrator accounts to display.

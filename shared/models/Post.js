@@ -75,7 +75,7 @@ PostSchema.statics = {
 	// Needs refactoring - ideally post count would be stored somewhere and queried once
 	getAllVisiblePosts: function (request, response, callback) {
 		
-		var Pagination = require(app.get('paths').shared.models + 'Pagination').Pagination,
+		var Pagination = require(app.get('paths').shared.models + 'Pagination'),
 			results = utils.getResultsFromRequest(request),
 			page = utils.getPageFromRequest(request),
 			rules = { visible: true },
@@ -113,4 +113,4 @@ PostSchema.statics = {
 // Define the model
 PostModel = db.model('Post', PostSchema);
 
-module.exports.Post = PostModel;
+module.exports = PostModel;

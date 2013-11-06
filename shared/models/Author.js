@@ -46,4 +46,4 @@ AuthorSchema = new Schema({
 // Define the model
 AuthorModel = db.model('Author', AuthorSchema);
 
-module.exports.Author = AuthorModel;
+module.exports = AuthorModel;

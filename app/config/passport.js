@@ -1,7 +1,7 @@
 module.exports = function () {
 	
 	var LocalStrategy = require('passport-local').Strategy,
-		Administrator = require(app.get('paths').models + 'Administrator').Administrator,
+		Administrator = require(app.get('paths').models + 'Administrator'),
 		passport = require('passport');	
 
 	// This method initializes an active login by storing a
@@ -28,6 +28,13 @@ module.exports = function () {
 				if (!administrator) {
 					return done(null, false);
 				}
+				// // Needs updating to test against hashed password
+				// bcrypt.compare(password, administrator.password, function (error, isMatch) {
+				// 	if (!isMatch) {
+				// 		return done(null, false);
+				// 	}
+				// 	return done(null, administrator);
+				// });
 				if (administrator.password != password) {
 					return done(null, false);
 				}
