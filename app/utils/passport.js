@@ -23,7 +23,7 @@ utils.authoriseLogin = function (request, response, next, callbacks) {
 };
 
 // Checks if the admin user is authenticated, then fires the relevant callback method
-utils.ensureAuthenticated = function (request, callbacks) {
+utils.ensureAuthenticated = function (request, response, callbacks) {
 
 	var isAuthorised = request.isAuthenticated();
 
@@ -33,6 +33,7 @@ utils.ensureAuthenticated = function (request, callbacks) {
 		if (typeof callbacks.failure === 'function') {
 			callbacks.failure.call();
 		} else {
+			request.session.originalUrl = request.originalUrl;
 			request.flash('info', 'Please log in to continue.');
 			response.redirect('/admin/login');
 		}
