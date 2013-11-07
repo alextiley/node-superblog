@@ -34,3 +34,20 @@ To Validate a Password
 * Retrieve the user's salt and hash from the database.
 * Prepend the salt to the given password and hash it using the same hash function.
 * Compare the hash of the given password with the hash from the database. If they match, the password is correct. Otherwise, the password is incorrect.
+
+Test Driven Development
+-----------------------
+
+Inspires simple designs and confidence
+
+Write automated test cases that initially fail:
+	- The test should define a new function or enhancement
+	- Then, produce the minimum amount of code to pass the test
+	- Refactor the code to acceptable standards
+
+Adding a test
+-------------
+Requirements and specification must be clearly understood before starting (via user stories or use cases)
+Each new feature begins with writing a test.
+The test must fail because it's written before implementing the feature.
+If the test doesn't fail initially, then the feature already exists or the test is defective.

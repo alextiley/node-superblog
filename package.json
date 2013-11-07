@@ -18,6 +18,7 @@
 		"email": "alextiley@gmail.com"
 	},
 	"devDependencies": {
+		"mocha": "latest",
 		"nodemon": "latest"
 	},
 	"scripts": {
