@@ -71,6 +71,17 @@ AdministratorSchema.statics.getByUsername = function (username, callback) {
 
 };
 
+AdministratorSchema.statics.create = function (request, response, callbacks) {
+	
+	var administrator = new this(request.body);
+
+	// @todo: validate administrator...
+
+	administrator.active = true;
+	administrator.save();
+
+};
+
 AdministratorModel = db.model('Administrator', AdministratorSchema);
 
 module.exports = AdministratorModel;

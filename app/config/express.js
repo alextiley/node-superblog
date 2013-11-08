@@ -76,7 +76,7 @@ module.exports = function () {
 	// Parse and populate cookie data to request.cookies
 	app.use(express.cookieParser());
 
-	// Automatically parse request bodies
+	// Automatically parse request bodies (scopes post data to request.body)
 	app.use(express.bodyParser());
 	
 	// Allow HTTP method overrides (using _method hidden input)

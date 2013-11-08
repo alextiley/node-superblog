@@ -1,5 +1,4 @@
-var utils = require(app.get('paths').utils + 'app')(app),
-	Post = require(app.get('paths').shared.models + 'Post');
+var Post = require(app.get('paths').shared.models + 'Post');
 
 module.exports.controller = function () {
 	

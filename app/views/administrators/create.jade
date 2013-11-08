@@ -1,0 +1,41 @@
+extends /layouts/default
+
+block title
+	title Create Administrator Account | SuperBlog Admin
+
+block content
+	.row
+		.large-12.columns
+			
+			h2 Create Administrator
+
+			include /partials/global/flash
+
+			form(action="/admin/administrators/create" method="POST")
+				
+				fieldset Please complete the fields below.
+					hr
+
+					label(for="admin_name") Name
+					input(type="text" id="admin_name" name="name" placeholder="John")
+
+					label(for="admin_surname") Surname
+					input(type="text" id="admin_surname" name="surname" placeholder="Smith")
+
+					label(for="admin_nickname") Nickname
+					input(type="text" id="admin_nickname" name="nickname" placeholder="Smithy")
+
+					label(for="admin_email") E-mail Address
+					input(type="text" id="admin_email" name="email" placeholder="john.smith@superblog.com")
+
+					label(for="admin_username") Username
+					input(type="text" id="admin_username" name="username" placeholder="johnsmith")
+
+					label(for="admin_password") Password
+					input(type="password" id="admin_password" name="password")
+
+					label(for="admin_confirm_password") Confirm Password
+					input(type="password" id="admin_confirm_password" name="password")
+
+					button(type="submit") Create Administrator
+					a(href="/admin/administrators/list" class="button secondary" style="margin-left:10px;") Cancel
