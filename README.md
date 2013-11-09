@@ -1,18 +1,38 @@
 node-superblog
 ==============
 
-A blog application written with node.js, complete with an admin interface.
+A blog application written with node.js, complete with an admin interface. This is mostly a learning exercise for me, but if it helps you set up an express project then that's good too!
+
+I've tried to use best practice wherever possible (though so far no TDD - which is kinda new to me).  
 
 
-Need to complete the following
-------------------------------
-* Admin: login
+TODO
+----
+* Learn and implement tests for TDD, using something like Mocha(?)
+* Admin: login (for some reason unhashing doesn't currently work)
+* Admin: Administrator CRUD
 * Admin: Author CRUD
 * Admin: Post CRUD
-* View single post page
-* Comments: CRUD
-* View all posts by tag page
-* View all posts by authors page
+* Admin: Comments CRUD
+* Site: View single post page
+* Site: View all posts by tag page
+* Site: View all posts by authors page
+* Site: Retrieve all tags for left navigation on list posts page (utilising async db transactions)
+
+Known Issues
+------------
+* Password unhashing doesn't currently work with bcrypt
+* No validation on administrator create screen
+* Unable to share view elements between multiple contexts (i.e. site, admin)
+* No seed data for administrator accounts - at the moment you need to do this via mongo in the terminal
+
+...if you're aware of any other issues please raise an issue =)
+
+
+Brain Dump
+==========
+
+This section is for me as it turns out I'm a bit of a noob and quite out of touch!
 
 Developer Notes
 ---------------
