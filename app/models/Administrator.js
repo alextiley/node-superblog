@@ -1,4 +1,5 @@
-var mongo = require('mongoose'),
+var bcrypt = require('bcrypt'),
+	mongo = require('mongoose'),
 	passport = require('passport'),
 	Schema = mongo.Schema,
 	ObjectId = Schema.Types.ObjectId,
@@ -30,14 +31,13 @@ AdministratorSchema = new Schema({
 // with a unique salt. Also store the salt for retrieval later.
 AdministratorSchema.pre('save', function (next) {
 	
-	var bcrypt = require('bcrypt'),
-		administrator = this,
+	var administrator = this,
 		hash;
 
 	if (!administrator.isModified('password')) {
 		return next();
 	}
-	
+
 	bcrypt.hash(administrator.password, 10, function (error, hash) {
 		
 		if (error) {
@@ -50,6 +50,17 @@ AdministratorSchema.pre('save', function (next) {
 	});
 
 });
+
+AdministratorSchema.methods.validatePassword = function (password, callback) {
+
+	bcrypt.compare(password, this.password, function (error, isMatch) {
+		if (error) {
+			return callback.call(this, error);
+		}
+		return callback.call(null, isMatch);
+	});
+
+};
 
 AdministratorSchema.statics.getById = function (id, callback) {
 

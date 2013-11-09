@@ -29,11 +29,14 @@ module.exports = function () {
 				if (!administrator) {
 					return done(null, false);
 				}
-				bcrypt.compare(password, administrator.password, function (error, isMatch) {
-					if (!isMatch) {
-						return done(null, false);
+				administrator.validatePassword(password, function (error, isMatch) {
+					if (error) {
+						return done(error);
 					}
-					return done(null, administrator);
+					if (!isMatch) {
+						return done(null, isMatch);
+					}
+					return done(null, isMatch);
 				});
 			})
 		});
