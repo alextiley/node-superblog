@@ -1,10 +1,6 @@
 var bcrypt = require('bcrypt'),
 	mongo = require('mongoose'),
-	passport = require('passport'),
 	Schema = mongo.Schema,
-	ObjectId = Schema.Types.ObjectId,
-	db = mongo.connection,
-	AdministratorModel,
 	AdministratorSchema;
 
 // Define the schema
@@ -39,13 +35,10 @@ AdministratorSchema.pre('save', function (next) {
 	}
 
 	bcrypt.hash(administrator.password, 10, function (error, hash) {
-		
 		if (error) {
 			return next(error);
 		}
-
 		administrator.password = hash;
-		
 		return next();
 	});
 
@@ -93,6 +86,4 @@ AdministratorSchema.statics.create = function (request, response, callbacks) {
 
 };
 
-AdministratorModel = db.model('Administrator', AdministratorSchema);
-
-module.exports = AdministratorModel;
+module.exports = mongo.connection.model('Administrator', AdministratorSchema);
