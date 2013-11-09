@@ -1,15 +1,13 @@
 var constants = require(app.get('paths').utils + 'constants'),
 	utils = require(app.get('paths').utils + 'app')();
 
-// constructor
+// Constructor
 function Pagination(page, results, count, requestUrl) {
 
-	// private variables
 	var totalPages = this.calculateTotalPages(results, count),
 		next = this.calculateNextPage(page, totalPages),
 		previous = this.calculatePrevPage(page);
 
-	// public variables
 	this.previous = previous;
 	this.current = page;
 	this.next = next;
@@ -29,7 +27,7 @@ function Pagination(page, results, count, requestUrl) {
 
 }
 
-// static methods (no instance references)
+// Static methods (no instance references)
 Pagination.prototype.calculateTotalPages = function (results, count) {
 	return Math.ceil(count / results);
 }
@@ -68,7 +66,7 @@ Pagination.prototype.validatePageBoundaries = function (page, totalPages) {
 	return page;
 }
 
-// instance methods
+// Instance methods (contains instance references)
 Pagination.prototype.getPageUrl = function (page, results) {
 
 	var requestUrl = null,

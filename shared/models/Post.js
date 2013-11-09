@@ -2,11 +2,8 @@ var utils = require(app.get('paths').utils + 'app')(),
 	mongo = require('mongoose'),
 	Schema = mongo.Schema,
 	ObjectId = Schema.Types.ObjectId,
-	db = mongo.connection,
-	PostSchema,
-	PostModel;
+	PostSchema;
 
-// Define the schema
 PostSchema = new Schema({
 	title: String,
 	summary: String,
@@ -34,20 +31,6 @@ PostSchema = new Schema({
 	}
 });
 
-// Instance methods
-PostSchema.methods = {
-
-	getPostsByThisAuthor: function (callback) {
-		return this.model('Post').find({
-			author: {
-				id: this.author.id
-			}
-		}, callback);
-	}
-
-};
-
-// Static methods
 PostSchema.statics = {
 
 	getPostCount: function (request, response, rules, callback) {
@@ -62,14 +45,6 @@ PostSchema.statics = {
 			}
 		});
 
-	},
-
-	getPostsByAuthorId: function (authorId, request, callback) {
-		return this.find({
-			author: {
-				id: authorId
-			}
-		}, callback);
 	},
 
 	// Needs refactoring - ideally post count would be stored somewhere and queried once
@@ -110,7 +85,4 @@ PostSchema.statics = {
 
 };
 
-// Define the model
-PostModel = db.model('Post', PostSchema);
-
-module.exports = PostModel;
+module.exports = mongo.connection.model('Post', PostSchema);

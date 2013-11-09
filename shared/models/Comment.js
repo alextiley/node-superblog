@@ -1,11 +1,8 @@
 var mongo = require('mongoose'),
 	Schema = mongo.Schema,
 	ObjectId = Schema.Types.ObjectId,
-	db = mongo.connection,
-	CommentSchema,
-	CommentModel;
+	CommentSchema;
 
-// Define the schema
 CommentSchema = new Schema({
 	content: String,
 	author: {
@@ -37,7 +34,4 @@ CommentSchema = new Schema({
 	}
 });
 
-// Define the model
-CommentModel = db.model('Comment', CommentSchema);
-
-module.exports = CommentModel;
+module.exports = mongo.connection.model('Comment', CommentSchema);

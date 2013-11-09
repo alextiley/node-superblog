@@ -1,9 +1,7 @@
 var mongo = require('mongoose'),
 	Schema = mongo.Schema,
 	ObjectId = Schema.Types.ObjectId,
-	db = mongo.connection,
-	AuthorSchema,
-	AuthorModel;
+	AuthorSchema;
 
 // Define the schema
 AuthorSchema = new Schema({
@@ -43,7 +41,4 @@ AuthorSchema = new Schema({
 	}
 });
 
-// Define the model
-AuthorModel = db.model('Author', AuthorSchema);
-
-module.exports = AuthorModel;
+module.exports = mongo.connection.model('Author', AuthorSchema);
