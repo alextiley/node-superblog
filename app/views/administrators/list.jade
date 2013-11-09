@@ -13,8 +13,10 @@ block content
 			
 			if administrators
 				
-				p Displaying administrator accounts:
-			
+				if paging
+					p You are currently viewing #{paging.firstItem} - #{paging.lastItem} of #{paging.totalResults} administrators.
+					//- include /partials/global/paging
+
 				table.administrators
 					thead
 						tr
@@ -23,6 +25,7 @@ block content
 							th Password (@todo: remove this)
 							th E-Mail
 							th Activation status
+							th
 
 						each administrator in administrators
 							tr
@@ -31,6 +34,10 @@ block content
 								td #{administrator.password}
 								td #{administrator.email}
 								td #{administrator.active ? 'Active' : 'Inactive'}
+								td: a(href="/admin/administrators/edit/#{administrator.id}" class="button small" style="margin:0;") Edit
+
+				if paging
+					//- include /partials/global/paging
 
 			else
 				p There are no administrator accounts to display.

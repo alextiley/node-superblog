@@ -7,7 +7,6 @@ var bcrypt = require('bcrypt'),
 AdministratorSchema = new Schema({
 	username: String,
 	password: String,
-	salt: String,
 	email: String,
 	name: String,
 	surname: String,
