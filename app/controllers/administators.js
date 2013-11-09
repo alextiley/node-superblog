@@ -7,7 +7,14 @@ module.exports.controller = function () {
 	app.get(/^\/admin\/administrators\/list\/?$/, function (request, response, next) {
 		auth.ensureAuthenticated(request, response, {
 			success: function () {
-				response.render('administrators/list');
+				Administrator.getAll(function (error, administrators) {
+					if (error) {
+						next(error);
+					}
+					response.render('administrators/list', {
+						administrators: administrators
+					});
+				});
 			}
 		});
 	});

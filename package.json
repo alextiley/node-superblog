@@ -22,7 +22,7 @@
 		"nodemon": "latest"
 	},
 	"scripts": {
-		"start": "nodemon application.js"
+		"start": "nodemon --debug application.js"
 	},
 	"repository" : {
 		"type" : "git",

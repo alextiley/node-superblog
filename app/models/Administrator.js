@@ -34,12 +34,17 @@ AdministratorSchema.pre('save', function (next) {
 		return next();
 	}
 
-	bcrypt.hash(administrator.password, 10, function (error, hash) {
+	bcrypt.genSalt(10, function (error, salt) {
 		if (error) {
 			return next(error);
 		}
-		administrator.password = hash;
-		return next();
+		bcrypt.hash(administrator.password, salt, function (error, hash) {
+			if (error) {
+				return next(error);
+			}
+			administrator.password = hash;
+			return next();
+		});
 	});
 
 });
@@ -54,6 +59,12 @@ AdministratorSchema.methods.validatePassword = function (password, callback) {
 	});
 
 };
+
+AdministratorSchema.statics.getAll = function (callback) {
+	this.find(function (error, administrators) {
+		callback.call(administrators, error, administrators);
+	});
+}
 
 AdministratorSchema.statics.getById = function (id, callback) {
 
@@ -75,14 +86,20 @@ AdministratorSchema.statics.getByUsername = function (username, callback) {
 
 };
 
-AdministratorSchema.statics.create = function (request, response, callbacks) {
+AdministratorSchema.statics.create = function (request, response, callback) {
 	
 	var administrator = new this(request.body);
 
 	// @todo: validate administrator...
 
 	administrator.active = true;
-	administrator.save();
+
+	administrator.save(function (error) {
+		if (error) {
+			response.flash('error', 'Unable to create a new administrator.')
+		}
+		callback(error);
+	});
 
 };
 

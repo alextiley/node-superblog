@@ -12,7 +12,26 @@ block content
 			include /partials/global/flash
 			
 			if administrators
+				
 				p Displaying administrator accounts:
+			
+				table.administrators
+					thead
+						tr
+							th Name
+							th Username
+							th Password (@todo: remove this)
+							th E-Mail
+							th Activation status
+
+						each administrator in administrators
+							tr
+								td #{administrator.name} #{administrator.surname}
+								td #{administrator.username}
+								td #{administrator.password}
+								td #{administrator.email}
+								td #{administrator.active ? 'Active' : 'Inactive'}
+
 			else
 				p There are no administrator accounts to display.
 
