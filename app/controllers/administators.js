@@ -4,14 +4,14 @@ module.exports.controller = function () {
 		auth = require(app.get('paths').utils + 'passport');
 
 	// List all administrator accounts
-	app.get(/^\/admin\/administrators\/list\/?$/, function (request, response, next) {
+	app.get(/^\/admin\/administrators\/?$/, function (request, response, next) {
 		auth.ensureAuthenticated(request, response, {
 			success: function () {
 				Administrator.getAll(function (error, administrators) {
 					if (error) {
 						next(error);
 					}
-					response.render('administrators/list', {
+					response.render('administrator_list', {
 						administrators: administrators
 					});
 				});
@@ -23,7 +23,7 @@ module.exports.controller = function () {
 	app.get(/^\/admin\/administrators\/create\/?$/, function (request, response, next) {
 		auth.ensureAuthenticated(request, response, {
 			success: function () {
-				response.render('administrators/create');
+				response.render('administrator_create');
 			}
 		});
 	});
@@ -36,7 +36,7 @@ module.exports.controller = function () {
 					if (error) {
 						response.redirect('/admin/administrators/create');
 					} else {
-						response.redirect('/admin/administrators/list');
+						response.redirect('/admin/administrators');
 					}
 				});
 			}

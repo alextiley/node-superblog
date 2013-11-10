@@ -1,12 +1,19 @@
-var bcrypt = require('bcrypt'),
+var crypto = require('crypto'),
 	mongo = require('mongoose'),
 	Schema = mongo.Schema,
 	AdministratorSchema;
 
 // Define the schema
 AdministratorSchema = new Schema({
-	username: String,
+	username: {
+		type: String,
+		required: true,
+		index: {
+			unique: true
+		}
+	},
 	password: String,
+	salt: String,
 	email: String,
 	name: String,
 	surname: String,
@@ -26,38 +33,53 @@ AdministratorSchema = new Schema({
 // with a unique salt. Also store the salt for retrieval later.
 AdministratorSchema.pre('save', function (next) {
 	
-	var administrator = this,
+	var self = this,
 		hash;
 
-	if (!administrator.isModified('password')) {
+	if (!self.isModified('password')) {
 		return next();
 	}
 
-	bcrypt.genSalt(10, function (error, salt) {
+	self.constructor.getSalt(function (error, salt) {
+
 		if (error) {
-			return next(error);
+			next(error);
 		}
-		bcrypt.hash(administrator.password, salt, function (error, hash) {
+
+		self.salt = salt.toString('hex');
+
+		self.constructor.getHash(self.password, self.salt, function (error, key) {
+
 			if (error) {
 				return next(error);
 			}
-			administrator.password = hash;
+
+			self.password = key.toString('hex');
+
 			return next();
 		});
+
 	});
 
 });
 
-AdministratorSchema.methods.validatePassword = function (password, callback) {
+AdministratorSchema.methods.validatePassword = function (guess, callback) {
 
-	bcrypt.compare(password, this.password, function (error, isMatch) {
-		if (error) {
-			return callback.call(this, error);
-		}
-		return callback.call(null, isMatch);
+	var hash = this.password,
+		salt = this.salt;
+
+	this.constructor.getHash(guess, salt, function (error, guessHash) {
+		callback(error, hash === guessHash.toString('hex'));
 	});
-
 };
+
+AdministratorSchema.statics.getSalt = function (callback) {
+	crypto.randomBytes(256, callback);
+}
+
+AdministratorSchema.statics.getHash = function (phrase, salt, callback) {
+	crypto.pbkdf2(phrase, salt, 25000, 512, callback);
+}
 
 AdministratorSchema.statics.getAll = function (callback) {
 	this.find(function (error, administrators) {
@@ -94,9 +116,6 @@ AdministratorSchema.statics.create = function (request, response, callback) {
 	administrator.active = true;
 
 	administrator.save(function (error) {
-		if (error) {
-			response.flash('error', 'Unable to create a new administrator.')
-		}
 		callback(error);
 	});
 

@@ -2,8 +2,7 @@ module.exports = function () {
 	
 	var LocalStrategy = require('passport-local').Strategy,
 		Administrator = require(app.get('paths').models + 'Administrator'),
-		passport = require('passport'),
-		bcrypt = require('bcrypt');
+		passport = require('passport');
 
 	// This method initializes an active login by storing a
 	// serialized administrator in to the session.
@@ -36,7 +35,7 @@ module.exports = function () {
 					if (!isMatch) {
 						return done(null, isMatch);
 					}
-					return done(null, isMatch);
+					return done(null, administrator);
 				});
 			})
 		});

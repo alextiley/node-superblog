@@ -10,8 +10,7 @@
 		"connect-flash": "latest",
 		"jade": "latest",
 		"passport": "latest",
-		"passport-local": "latest",
-		"bcrypt": "latest"
+		"passport-local": "latest"
 	},
 	"contributors": {
 		"name": "Alex Tiley",
