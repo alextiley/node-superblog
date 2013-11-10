@@ -22,7 +22,6 @@ block content
 						tr
 							th Name
 							th Username
-							th Password (@todo: remove this)
 							th E-Mail
 							th Activation status
 							th
@@ -31,7 +30,6 @@ block content
 							tr
 								td #{administrator.name} #{administrator.surname}
 								td #{administrator.username}
-								td #{administrator.password}
 								td #{administrator.email}
 								td #{administrator.active ? 'Active' : 'Inactive'}
 								td: a(href="/admin/administrators/edit/#{administrator.id}" class="button small" style="margin:0;") Edit
