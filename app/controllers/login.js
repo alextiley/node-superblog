@@ -33,7 +33,7 @@ module.exports.controller = function () {
 				response.redirect(successRedirect);
 			},
 			failure: function () {
-				request.flash('error', 'Unable to login. Please supply a valid username and password.');
+				request.flash('error', 'Please enter a valid username and password.');
 				response.redirect('/admin/login');
 			}
 		});
