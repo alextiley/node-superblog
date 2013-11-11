@@ -1,15 +1,17 @@
-extend /layouts/default
+extends /layouts/full_width
 
 block title
-	title Internal server error (500) | SuperBlog Admin
+	title Internal server error (500) | Admin
 
 block content
-	.row
-		.large-12.columns
-			h2 Internal server error (500)
-			p Sorry, but somebody has broken the site. Please forward the message below to somebody important:
+
+	.jumbotron
+		.container
+			h1 Internal server error (500)
+			p Sorry, but you've managed to break the app. Please forward the message below to a developer:
 			if error.msg
 				pre #{error.msg}
 				hr
 			if error.stack
 				pre #{error.stack}
+			a(href="/admin/dashboard" class="btn btn-lg btn-success") Go to Dashboard

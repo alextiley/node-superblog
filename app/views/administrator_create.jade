@@ -1,41 +1,57 @@
 extends /layouts/default
 
 block title
-	title Create Administrator Account | SuperBlog Admin
+	title Create Administrator | Admin
 
 block content
-	.row
-		.large-12.columns
+
+	h2 Create Administrator
+
+	include /partials/global/flash
+
+	form(action="/admin/administrators/create" method="POST" class="form-horizontal")
+
+		fieldset Please complete the fields below.
 			
-			h2 Create Administrator
+			hr
 
-			include /partials/global/flash
+			.form-group
+				label(for="admin_name" class="col-sm-2 control-label") Name
+				.col-sm-10
+					input(type="text" id="admin_name" name="name" placeholder="John" class="form-control")
 
-			form(action="/admin/administrators/create" method="POST")
-				
-				fieldset Please complete the fields below.
-					hr
+			.form-group
+				label(for="admin_surname" class="col-sm-2 control-label") Surname
+				.col-sm-10
+					input(type="text" id="admin_surname" name="surname" placeholder="Smith" class="form-control")
 
-					label(for="admin_name") Name
-					input(type="text" id="admin_name" name="name" placeholder="John")
+			.form-group
+				label(for="admin_nickname" class="col-sm-2 control-label") Nickname
+				.col-sm-10
+					input(type="text" id="admin_nickname" name="nickname" placeholder="Smithy" class="form-control")
 
-					label(for="admin_surname") Surname
-					input(type="text" id="admin_surname" name="surname" placeholder="Smith")
+			.form-group
+				label(for="admin_email" class="col-sm-2 control-label") E-mail Address
+				.col-sm-10
+					input(type="text" id="admin_email" name="email" placeholder="john.smith@superblog.com" class="form-control")
 
-					label(for="admin_nickname") Nickname
-					input(type="text" id="admin_nickname" name="nickname" placeholder="Smithy")
+			.form-group
+				label(for="admin_username" class="col-sm-2 control-label") Username
+				.col-sm-10
+					input(type="text" id="admin_username" name="username" placeholder="johnsmith" class="form-control")
 
-					label(for="admin_email") E-mail Address
-					input(type="text" id="admin_email" name="email" placeholder="john.smith@superblog.com")
+			.form-group
+				label(for="admin_password" class="col-sm-2 control-label") Password
+				.col-sm-10
+					input(type="password" id="admin_password" name="password" class="form-control")
 
-					label(for="admin_username") Username
-					input(type="text" id="admin_username" name="username" placeholder="johnsmith")
+			.form-group
+				label(for="admin_confirm_password" class="col-sm-2 control-label") Confirm Password
+				.col-sm-10
+					input(type="password" id="admin_confirm_password" name="passwordConfirmed" class="form-control")
 
-					label(for="admin_password") Password
-					input(type="password" id="admin_password" name="password")
+			hr
 
-					label(for="admin_confirm_password") Confirm Password
-					input(type="password" id="admin_confirm_password" name="passwordConfirmed")
-
-					button(type="submit") Create Administrator
-					a(href="/admin/administrators" class="button secondary" style="margin-left:10px;") Cancel
+			.well
+				button(type="submit" class="btn btn-primary") Create Administrator
+				a(href="/admin/administrators" class="button secondary" style="margin-left:10px;") Cancel

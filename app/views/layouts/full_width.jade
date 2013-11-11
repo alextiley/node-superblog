@@ -2,18 +2,20 @@
 html.no-js
 	head
 		block title
-
+		
 		meta(name='viewport' content='width=device-width, initial-scale=1.0')
 		
 		link(rel='stylesheet', href='/admin/css/vendor/bootstrap.min.css')
 		link(rel='stylesheet', href='/admin/css/vendor/bootstrap-theme.min.css')
 		link(rel='stylesheet', href='/admin/css/global.css')
-		link(rel='stylesheet', href='/admin/css/login.css')
 
 	body(class='#{common.bodyClasses}')
 
-		.container
-			block content
+		include /partials/global/header
+
+		block content
+
+		include /partials/global/footer
 
 		script(src='/admin/js/vendor/jquery.js')
 		script(src='/admin/js/vendor/bootstrap.min.js')

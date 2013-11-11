@@ -1,14 +1,40 @@
-extends /layouts/default
+extends /layouts/full_width
 
 block title
-	title Dashboard | SuperBlog Admin
+	title Dashboard | Admin
 
 block content
-	.row
-		.large-12.columns
-			
-			h2 Dashboard
+
+	.jumbotron
+
+		.container
+
+			h1 Dashboard
 
 			include /partials/global/flash
 			
-			p This is the dashboard.
+			p This is the dashboard. One day we'll show you some cool graphs here...
+
+	.container
+
+		.row
+
+			.col-md-3
+				h2 Blog Posts
+				p View and manage your blog's content. Create new posts or edit old ones!
+				p: a(href="/admin/posts" class="btn btn-default") Manage blog posts
+
+			.col-md-3
+				h2 Comments
+				p View and manage comments placed on your blog posts.
+				p: a(href="/admin/comments" class="btn btn-default") Manage comments
+
+			.col-md-3
+				h2 Authors
+				p Manage authors that can write posts on this blog.
+				p: a(href="/admin/authors" class="btn btn-default") Manage authors
+
+			.col-md-3
+				h2 Administators
+				p This section allows you to manage system administrators.
+				p: a(href="/admin/administrators" class="btn btn-default") Manage administrators

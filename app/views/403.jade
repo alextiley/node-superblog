@@ -1,15 +1,17 @@
-extend /layouts/default
+extends /layouts/full_width
 
 block title
-	title Access denied (403) | SuperBlog Admin
+	title Access denied (403) | Admin
 
 block content
-	.row
-		.large-12.columns
-			h2 Access denied (403)
-			p You're not allowed to access to this page. If you think this is wrong, please forward the message below to somebody important:
+
+	.jumbotron
+		.container
+			h1 Access denied (403)
+			p You're not allowed in here! Shoo! Off with you!
 			if error.msg
 				pre #{error.msg}
 				hr
 			if error.stack
 				pre #{error.stack}
+			a(href="/admin/dashboard" class="btn btn-lg btn-success") Go to Dashboard

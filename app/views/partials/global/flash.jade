@@ -2,7 +2,7 @@
 
 - if (messages.errors !== undefined)
 	- if (messages.errors.length > 0)
-		.alert-box.alert
+		.alert.alert-danger
 			- if (messages.errors.length === 1) {
 				.message #{messages.errors[0]}
 			- } else {
@@ -13,7 +13,7 @@
 
 - if (messages.info !== undefined)
 	- if (messages.info.length > 0)
-		.alert-box
+		.alert.alert-info
 			- if (messages.info.length === 1) {
 				.message #{messages.info[0]}
 			- } else {
@@ -24,7 +24,7 @@
 
 - if (messages.success !== undefined)
 	- if (messages.success.length > 0)
-		.alert-box.success
+		.alert.alert-success
 			- if (messages.success.length === 1) {
 				.message #{messages.success[0]}
 			- } else {

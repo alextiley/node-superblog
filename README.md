@@ -22,7 +22,6 @@ TODO
 
 Known Issues
 ------------
-* No validation on administrator create screen
 * Unable to share view elements between multiple contexts (i.e. site, admin)
 * No seed data for administrator accounts - at the moment you need to do this via mongo in the terminal
 

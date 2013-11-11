@@ -1,11 +1,13 @@
-extend /layouts/default
+extends /layouts/full_width
 
 block title
-	title Page not found (404) | SuperBlog Admin
+	title Page not found (404) | Admin
 
 block content
-	.row
-		.large-12.columns
-			h2 Page not found (404)
-			p Sorry, but the page could not be found.
+
+	.jumbotron
+		.container
+			h1 Page not found (404)
+			p Sorry, but the page could not be found. Please check the URL and try again.
 			pre [#{method}] #{url} - 404 Not Found
+			a(href="/admin/dashboard" class="btn btn-lg btn-success") Go to Dashboard

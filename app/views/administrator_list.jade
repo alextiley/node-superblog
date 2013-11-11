@@ -1,43 +1,42 @@
 extends /layouts/default
 
 block title
-	title Administrator Accounts | SuperBlog Admin
+	title All Administrators | Admin
 
 block content
-	.row
-		.large-12.columns
-			
-			h2 Administrator Accounts
 
-			include /partials/global/flash
-			
-			if administrators.length > 0
-				
-				if paging
-					p You are currently viewing #{paging.firstItem} - #{paging.lastItem} of #{paging.totalResults} administrators.
-					//- include /partials/global/paging
+		h2 All Administrators
 
-				table.administrators
-					thead
+		include /partials/global/flash
+		
+		if administrators.length > 0
+			
+			if paging
+				p You are currently viewing #{paging.firstItem} - #{paging.lastItem} of #{paging.totalResults} administrators.
+				//- include /partials/global/paging
+
+			table.administrators.table
+				thead
+					tr
+						th Name
+						th Username
+						th E-Mail
+						th.text-center Activation status
+						th
+
+					each administrator in administrators
 						tr
-							th Name
-							th Username
-							th E-Mail
-							th Activation status
-							th
+							td #{administrator.name} #{administrator.surname}
+							td #{administrator.username}
+							td #{administrator.email}
+							td.text-center #{administrator.active ? 'Active' : 'Inactive'}
+							td.text-right: a(href="/admin/administrators/edit/#{administrator.id}" class="btn btn-default btn-sm") Edit
 
-						each administrator in administrators
-							tr
-								td #{administrator.name} #{administrator.surname}
-								td #{administrator.username}
-								td #{administrator.email}
-								td #{administrator.active ? 'Active' : 'Inactive'}
-								td: a(href="/admin/administrators/edit/#{administrator.id}" class="button small" style="margin:0;") Edit
+			if paging
+				//- include /partials/global/paging
 
-				if paging
-					//- include /partials/global/paging
+		else
+			p There are no administrator accounts to display.
 
-			else
-				p There are no administrator accounts to display.
-
-			a(href="/admin/administrators/create" class="button") Create Administrator
+		.well
+			a(href="/admin/administrators/create" class="btn btn-primary") Create administrator

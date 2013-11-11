@@ -1,6 +1,18 @@
-header.row
-	.large-12.columns
-		h1: a(href='/admin/login') Admin: #{pkg.name}
-		em Administration interface for #{pkg.description}
-		a(href="/admin/logout").right Log Out
-		hr
+header(class="navbar navbar-inverse navbar-fixed-top")
+
+	.container
+
+		.navbar-header
+			a.navbar-brand(href="/admin/login") #{pkg.name}
+
+		ul.nav.navbar-nav
+			li: a(href="/admin/dashboard") Dashboard
+			li: a(href="/admin/posts") Posts
+			li: a(href="/admin/comments") Comments
+			li: a(href="/admin/authors") Authors
+
+		.navbar-right
+			a(href="/admin/logout" class="btn btn-danger btn-sm sign_out") Sign Out
+
+		ul.nav.navbar-nav.navbar-right
+			li: a(href="/admin/administrators") Administrators
