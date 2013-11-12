@@ -5,29 +5,56 @@ var utils = require(app.get('paths').utils + 'app')(),
 	PostSchema;
 
 PostSchema = new Schema({
-	title: String,
-	summary: String,
-	content: String,
+	title: {
+		type: String,
+		required: true
+	},
+	summary: {
+		type: String
+	},
+	content: {
+		type: String
+	},
+	visible: {
+		type: Boolean,
+		required: true
+	},
+	url: {
+		type: String,
+		required: true,
+		unique: true
+	},
+	status: {
+		type: String,
+		required: true,
+		enum: ['DRAFT', 'APPROVAL_REQUIRED', 'APPROVED', 'PUBLISHED', 'ARCHIVED']
+	},
 	created: {
 		type: Date,
+		required: true,
 		default: Date.now
 	},
 	modified: {
 		type: Date,
+		required: true,
 		default: Date.now
 	},
 	author: {
 		type: ObjectId,
+		required: true,
 		ref: 'Author'
 	},
 	comments: {
 		type: [ObjectId],
 		ref: 'Comment'
 	},
-	visible: Boolean,
 	meta: {
-		likes: Number,
-		tags: [String]
+		likes: {
+			type: Number
+		},
+		tags: {
+			type: [String]
+		}
 	}
 });
 

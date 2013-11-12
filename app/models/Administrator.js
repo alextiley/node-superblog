@@ -3,30 +3,49 @@ var crypto = require('crypto'),
 	Schema = mongo.Schema,
 	AdministratorSchema;
 
-// Define the schema
 AdministratorSchema = new Schema({
 	username: {
 		type: String,
 		required: true,
-		index: {
-			unique: true
-		}
+		unique: true
 	},
-	password: String,
-	salt: String,
-	email: String,
-	name: String,
-	surname: String,
-	nickname: String,
-	active: Boolean,
+	password: {
+		type: String,
+		required: true
+	},
+	salt: {
+		type: String,
+		required: true
+	},
+	email: {
+		type: String,
+		required: true
+	},
+	name: {
+		type: String,
+		required: true
+	},
+	surname: {
+		type: String,
+		required: true
+	},
+	nickname: {
+		type: String
+	},
+	active: {
+		type: Boolean,
+		required: true
+	},
 	created: {
 		type: Date,
+		required: true,
 		default: Date.now
 	},
 	modified: {
 		type: Date,
+		required: true,
 		default: Date.now
-	}
+	},
 });
 
 // Before saving the administrator, ensure that a new hash is generated
