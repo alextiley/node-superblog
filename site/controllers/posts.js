@@ -6,8 +6,8 @@ module.exports.controller = function () {
 
 		Post.getAllVisiblePosts(request, response, function (posts, paging) {
 
-			app.locals.posts = posts;
-			app.locals.paging = paging;
+			response.locals.posts = posts;
+			response.locals.paging = paging;
 
 			response.render('posts');
 		});
