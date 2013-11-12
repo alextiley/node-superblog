@@ -30,7 +30,16 @@ block content
 							td #{administrator.username}
 							td #{administrator.email}
 							td.text-center #{administrator.active ? 'Active' : 'Inactive'}
-							td.text-right: a(href="/admin/administrators/edit/#{administrator.id}" class="btn btn-default btn-sm") Edit
+							td.text-right
+								div(class="btn-group")
+									a(href="/admin/administrators/edit/#{administrator.id}" class="btn btn-default") Edit
+									a(class="btn btn-default dropdown-toggle" data-toggle="dropdown")
+										span.caret
+										span.sr-only Toggle Dropdown
+									ul(class="dropdown-menu text-left" role="menu")
+										li: a(href="/admin/administrators/edit/#{administrator.id}") Edit
+										li.divider
+										li: a(href="/admin/administrators/delete/#{administrator.id}") Delete
 
 			if paging
 				//- include /partials/global/paging
@@ -40,3 +49,5 @@ block content
 
 		.well
 			a(href="/admin/administrators/create" class="btn btn-primary") Create administrator
+			|&nbsp;&nbsp;
+			a(href="/admin/dashboard" class="btn btn-default") Back to dashboard
