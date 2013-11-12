@@ -54,7 +54,7 @@ AdministratorSchema.pre('save', function (next) {
 				return next(error);
 			}
 
-			self.password = key.toString('hex');
+			self.password = self.salt.concat(key.toString('hex'));
 
 			return next();
 		});
@@ -69,7 +69,7 @@ AdministratorSchema.methods.validatePassword = function (guess, callback) {
 		salt = this.salt;
 
 	this.constructor.getHash(guess, salt, function (error, guessHash) {
-		callback(error, hash === guessHash.toString('hex'));
+		callback(error, hash === salt.concat(guessHash.toString('hex')));
 	});
 };
 

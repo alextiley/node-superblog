@@ -1,3 +1,4 @@
+// Consider moving this functionality into Administrator class as static methods
 var passport = require('passport'),
 	utils = {};
 
