@@ -12,7 +12,7 @@ require(__dirname + '/app/config/global')(__dirname);
 require(app.get('paths').config + 'environment')[env]();
 
 // Application utility methods
-utils = require(app.get('paths').utils + 'app')();
+utils = require(app.get('paths').utils + 'app');
 
 // Express configuration
 require(app.get('paths').config + 'express')();

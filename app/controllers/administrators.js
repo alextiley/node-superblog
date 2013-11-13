@@ -1,7 +1,8 @@
 module.exports.controller = function () {
 
 	var Administrator = require(app.get('paths').models + 'Administrator'),
-		auth = require(app.get('paths').utils + 'passport');
+		auth = require(app.get('paths').utils + 'passport'),
+		utils = require(app.get('paths').utils + 'app');
 
 	// List all administrator accounts
 	app.get(/^\/admin\/administrators\/?$/, function (request, response, next) {
@@ -32,10 +33,12 @@ module.exports.controller = function () {
 	app.post(/^\/admin\/administrators\/create\/?$/, function (request, response, next) {
 		auth.ensureAuthenticated(request, response, {
 			success: function () {
-				Administrator.create(request, response, function (error) {
+				Administrator.create(request, response, function (error, administrator) {
 					if (error) {
+						request.flash('errors', utils.getMongooseFlashErrors(request, error));
 						response.redirect('/admin/administrators/create');
 					} else {
+						request.flash('success', 'The administrator \'' + administrator.username + '\' was successfully created.');
 						response.redirect('/admin/administrators');
 					}
 				});

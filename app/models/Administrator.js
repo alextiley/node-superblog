@@ -1,4 +1,5 @@
-var crypto = require('crypto'),
+var validators = require(app.get('paths').utils + 'validators'),
+	crypto = require('crypto'),
 	mongo = require('mongoose'),
 	Schema = mongo.Schema,
 	AdministratorSchema;
@@ -7,15 +8,15 @@ AdministratorSchema = new Schema({
 	username: {
 		type: String,
 		required: true,
-		unique: true
+		unique: true,
+		validate: validators.username
 	},
 	password: {
 		type: String,
 		required: true
 	},
 	salt: {
-		type: String,
-		required: true
+		type: String
 	},
 	email: {
 		type: String,
@@ -45,7 +46,7 @@ AdministratorSchema = new Schema({
 		type: Date,
 		required: true,
 		default: Date.now
-	},
+	}
 });
 
 // Before saving the administrator, ensure that a new hash is generated
@@ -130,12 +131,10 @@ AdministratorSchema.statics.create = function (request, response, callback) {
 	
 	var administrator = new this(request.body);
 
-	// @todo: validate administrator...
-
 	administrator.active = true;
 
-	administrator.save(function (error) {
-		callback(error);
+	administrator.save(function (error, administrator) {
+		callback(error, administrator);
 	});
 
 };

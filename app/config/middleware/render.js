@@ -1,4 +1,4 @@
-var utils = require(app.get('paths').utils + 'app')(),
+var utils = require(app.get('paths').utils + 'app'),
 	overrideRenderMiddleware;
 
 // This method overrides the default render method, allowing

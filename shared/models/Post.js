@@ -1,4 +1,4 @@
-var utils = require(app.get('paths').utils + 'app')(),
+var utils = require(app.get('paths').utils + 'app'),
 	mongo = require('mongoose'),
 	Schema = mongo.Schema,
 	ObjectId = Schema.Types.ObjectId,

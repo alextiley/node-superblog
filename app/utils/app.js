@@ -1,4 +1,4 @@
-function utils () {
+var utils = function () {
 
 	var constants = require(app.get('paths').utils + 'constants'),
 		utils = {};
@@ -60,7 +60,7 @@ function utils () {
 
 		locals.messages = {
 			success: request.flash('success'),
-			errors: request.flash('error'),
+			errors: request.flash('errors'),
 			info: request.flash('info')
 		};
 		
@@ -99,6 +99,28 @@ function utils () {
 			console.error(error.stack);
 		}
 
+	};
+
+	/*
+	 *	Scopes flash error messages to the request object
+	 *
+	 *	request: the request object to push the messages into
+	 *	mongooseError: the error object returned from mongoose
+	 */
+	utils.getMongooseFlashErrors = function (request, mongooseError) {
+
+		var fields = mongooseError.errors,
+			errorMessages = [],
+			validationType;
+
+		for (field in fields) {
+			if (fields.hasOwnProperty(field)) {
+				validationType = fields[field].type === 'required' ? 'required' : 'format';
+				errorMessages.push('errors.' + validationType + '.' + fields[field].path);
+			}
+		}
+
+		return errorMessages;
 	};
 
 	/*	
@@ -208,4 +230,4 @@ function utils () {
 
 };
 
-module.exports = utils;
+module.exports = utils();

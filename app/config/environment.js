@@ -17,6 +17,18 @@ module.exports = {
 		});
 
 	},
-	staging: function () {},
-	production: function () {}
+	staging: function () {
+
+		app.set('server', {
+			port: 80
+		});
+
+	},
+	production: function () {
+
+		app.set('server', {
+			port: 80
+		});
+
+	}
 };

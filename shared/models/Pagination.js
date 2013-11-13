@@ -1,5 +1,5 @@
 var constants = require(app.get('paths').utils + 'constants'),
-	utils = require(app.get('paths').utils + 'app')();
+	utils = require(app.get('paths').utils + 'app');
 
 // Constructor
 function Pagination(page, results, count, requestUrl) {
