@@ -1,0 +1,21 @@
+extend /layouts/default
+
+block title
+	title #{post.title} | Blog Post | SuperBlog
+
+block content
+	.row
+		.large-12.columns
+
+			h2 #{post.title}
+			small.subheader Written by #{post.author} on #{post.created}. Last edited on #{post.modified}
+
+			if post.summary
+				p #{post.summary}
+
+			p #{post.content}
+
+			small Liked #{post.meta.likes} times.
+
+			each tag in post.meta.tags
+				include /partials/posts/tags

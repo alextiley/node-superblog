@@ -1,5 +1,5 @@
 hr
-h3.subheader #{post.title}
+h3.subheader: a(href="/posts/#{post.id}") #{post.title}
 small.subheader Written by #{post.author} on #{post.created}. Last edited on #{post.modified}
 p #{post.summary}
 small Liked #{post.meta.likes} times.

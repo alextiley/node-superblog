@@ -50,7 +50,8 @@ PostSchema = new Schema({
 	},
 	meta: {
 		likes: {
-			type: Number
+			type: Number,
+			default: 0
 		},
 		tags: {
 			type: [String]
@@ -70,6 +71,23 @@ PostSchema.statics = {
 			} else {
 				utils.renderErrorPage(error, request, response, 'Get post count query failed.');
 			}
+		});
+
+	},
+
+	// Needs refactoring and input validation
+	getPost: function (request, response, callback) {
+
+		var rules = { visible: true, _id: request.params.id };
+
+		this.findOne(rules).exec(function (error, post) {
+
+			if (post) {
+				callback.call(post, post);
+			} else {
+				utils.renderErrorPage(error, request, response, 'Get single post query failed.');
+			}
+
 		});
 
 	},
