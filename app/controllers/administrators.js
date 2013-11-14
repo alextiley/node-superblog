@@ -33,9 +33,9 @@ module.exports.controller = function () {
 	app.post(/^\/admin\/administrators\/create\/?$/, function (request, response, next) {
 		auth.ensureAuthenticated(request, response, {
 			success: function () {
-				Administrator.create(request, response, function (error, administrator) {
-					if (error) {
-						request.flash('errors', utils.getMongooseFlashErrors(request, error));
+				Administrator.create(request, response, function (mongooseError, administrator) {
+					if (mongooseError) {
+						request.flash('errors', utils.getMongooseFlashErrors(request, mongooseError));
 						response.redirect('/admin/administrators/create');
 					} else {
 						request.flash('success', 'The administrator \'' + administrator.username + '\' was successfully created.');

@@ -116,7 +116,7 @@ var utils = function () {
 		for (field in fields) {
 			if (fields.hasOwnProperty(field)) {
 				validationType = fields[field].type === 'required' ? 'required' : 'format';
-				errorMessages.push('errors.' + validationType + '.' + fields[field].path);
+				errorMessages.push('i18n.errors.' + validationType + '.' + fields[field].path);
 			}
 		}
 

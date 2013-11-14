@@ -8,19 +8,27 @@ AdministratorSchema = new Schema({
 	username: {
 		type: String,
 		required: true,
-		unique: true,
-		validate: validators.username
+		validate: [
+			{ validator: validators.unique },
+			{ validator: validators.username }
+		]
 	},
 	password: {
 		type: String,
-		required: true
+		required: true,
+		validate: validators.password
 	},
 	salt: {
 		type: String
 	},
 	email: {
 		type: String,
-		required: true
+		required: true,
+		unique: true,
+		validate: [
+			{ validator: validators.unique },
+			{ validator: validators.email }
+		]
 	},
 	name: {
 		type: String,
@@ -39,12 +47,10 @@ AdministratorSchema = new Schema({
 	},
 	created: {
 		type: Date,
-		required: true,
 		default: Date.now
 	},
 	modified: {
 		type: Date,
-		required: true,
 		default: Date.now
 	}
 });
