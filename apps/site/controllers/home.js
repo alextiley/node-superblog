@@ -1,10 +1,11 @@
-module.exports.controller = function (site, app, mongoose, context) {
+module.exports.controller = function (app, config, mongoose, context) {
 
-	site.get('/home', function (request, response) {
+	app.get('/home', function (request, response) {
 		response.redirect('/');
 	});
 
-	site.get('/', function (request, response) {
+	app.get('/', function (request, response) {
+		console.log('GO!');
 		response.render('home');
 	});
 

@@ -61,9 +61,10 @@ self.getCommonRouteData = function (view, locals, request, response, config) {
 	locals.common[constants.BODY_CLASSES] = self.getHtmlBodyClasses(request, view);
 
 	locals.messages = {
-		success: request.flash('success'),
-		errors: request.flash('errors'),
-		info: request.flash('info')
+		success: request.flash(constants.FLASH_SUCCESS),
+		errors: request.flash(constants.FLASH_ERROR),
+		warning: request.flash(constants.FLASH_WARNING),
+		info: request.flash(constants.FLASH_INFO)
 	};
 
 	return locals;

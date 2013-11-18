@@ -35,7 +35,7 @@ module.exports.controller = function (app, config, mongoose, context) {
 			success: function () {
 				Administrator.create(request, response, function (mongooseError, administrator) {
 					if (mongooseError) {
-						request.flash('errors', validation.utils.getMongooseFlashErrors(request, mongooseError));
+						request.flash('error', validation.utils.getMongooseFlashErrors(request, mongooseError));
 						response.redirect('/admin/administrators/create');
 					} else {
 						request.flash('success', 'The administrator \'' + administrator.username + '\' was successfully created.');

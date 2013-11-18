@@ -4,5 +4,9 @@ module.exports = {
 	DEFAULT_PAGE: 1,
 	DEFAULT_RESULTS: 20,
 	PAGE_PARAM: 'page',
-	RESULTS_PARAM: 'results'
+	RESULTS_PARAM: 'results',
+	FLASH_SUCCESS: 'success',
+	FLASH_ERROR: 'error',
+	FLASH_INFO: 'info',
+	FLASH_WARNING: 'warning'
 };
