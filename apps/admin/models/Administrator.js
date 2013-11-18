@@ -1,6 +1,6 @@
-module.exports = function (config) {
+function Post(config) {
 
-	var validators = require(config.paths.app.utils + 'validators'),
+	var validators = require(config.paths.shared.utils + 'validators'),
 		crypto = require('crypto'),
 		mongo = require('mongoose'),
 		Schema = mongo.Schema,
@@ -147,6 +147,7 @@ module.exports = function (config) {
 
 	};
 
-	mongo.connection.model('Administrator', AdministratorSchema);
-
+	return mongo.connection.model('Administrator', AdministratorSchema);
 }
+
+module.exports = Post;

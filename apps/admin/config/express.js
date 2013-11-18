@@ -72,7 +72,6 @@ module.exports = function (app, config, mongoose) {
 	// Page not found (404)
 	// ---- next() will trigger a 404 as no routes match after this
 	app.get('/admin/404', function (request, response, next) {
-		console.log('404 requested');
 		next();
 	});
 

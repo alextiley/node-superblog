@@ -1,13 +1,12 @@
-module.exports = function () {
+module.exports = function (app, config, mongoose) {
 
-	var express = require('express'),
-		passport = require('passport'),
+	var paths = config.paths,
+		express = require('express'),
 		flash = require('connect-flash'),
-		mongoStore = require('connect-mongo')(express),
-		utils = require(app.get('paths').utils + 'app'),
-		pkg = require(app.get('paths').root + 'package.json'),
-		constants = require(app.get('paths').utils + 'constants'),
-		render = require(app.get('paths').middleware + 'render');
+		urlUtils = require(paths.shared.utils + 'url'),
+		constants = require(paths.shared.utils + 'constants'),
+		expressUtils = require(paths.shared.utils + 'express'),
+		renderOverride = require(paths.shared.middleware + 'renderOverride');
 
 	// Development-specific configuration
 	app.configure('development', function () {
@@ -17,18 +16,6 @@ module.exports = function () {
 		app.locals.pretty = true;
 	});
 
-	// Configure the current context (site or admin)
-	app.use(function (request, response, next) {
-		if (/(^\/admin)(\/)?/.test(request.url)) {
-			app.enable('admin');
-			app.disable('site');
-		} else {
-			app.enable('site');
-			app.disable('admin');
-		}
-		next();
-	});
-
 	// Set .jade as the default template extension
 	app.set('view engine', 'jade');
 
@@ -36,45 +23,22 @@ module.exports = function () {
 	app.use(flash());
 
 	// Set the assets path
-	app.use('/site', express.static(app.get('paths').site.assets));
-	app.use('/admin', express.static(app.get('paths').assets));
+	app.use('/', express.static(paths.app.assets));
 
-	// Set the site's base directory
+	// Set the base directory
 	app.use('/', function (request, response, next) {
-		app.locals.basedir = app.get('paths').site.views;
-		next();
-	});
-
-	// Set the admin base directory
-	app.use('/admin', function (request, response, next) {
-		app.locals.basedir = app.get('paths').views;
-		next();
-	});
-
-	// Expose package.json to views
-	app.use(function (request, response, next) {
-		app.locals.pkg = pkg;
+		app.locals.basedir = paths.app.views;
 		next();
 	});
 
 	// Sets the favicon path (default is an express favicon)
-	app.use('/', express.favicon(app.get('paths').site.assets + 'img/favicon.ico'));
-	app.use('/admin', express.favicon(app.get('paths').assets + 'img/favicon.ico'));
+	app.use('/', express.favicon(paths.app.assets + 'img/favicon.ico'));
 
 	// Set the base view path
 	app.use('/', function (request, response, next) {
-		app.set('views', app.get('paths').site.views);
+		app.set('views', paths.app.views);
 		next();
 	});
-
-	// Set the base view path
-	app.use('/admin', function (request, response, next) {
-		app.set('views', app.get('paths').views);
-		next();
-	});
-
-	// Parse and populate cookie data to request.cookies
-	app.use(express.cookieParser());
 
 	// Automatically parse request bodies (scopes post data to request.body)
 	app.use(express.bodyParser());
@@ -82,39 +46,27 @@ module.exports = function () {
 	// Allow HTTP method overrides (using _method hidden input)
 	app.use(express.methodOverride());
 
-	// Provides cookie-based sessions with mongo storage
-	app.use(express.session({
-		secret: app.get('cookies').secret,
-		store: new mongoStore ({
-			url: app.get('db').url
-		})
-	}));
-
-	// Enable passport authentication
-	app.use(passport.initialize());
-	app.use(passport.session());
-
 	// Include common view data, invoked on all route requests
-	app.use(render.overrideRender());
+	app.use(renderOverride.requests(config));
 
 	// Allows mounting of roots
 	app.use(app.router);
 
 	// Page not found (404)
 	// ---- next() will trigger a 404 as no routes match after this
-	app.get(/^\/(admin\/)?404(\/)?$/, function (request, response, next) {
+	app.get('/404', function (request, response, next) {
 		next();
 	});
 
 	// Access denied (403)
-	app.get(/^\/(admin\/)?403(\/)?$/, function (request, response, next) {
+	app.get('/403', function (request, response, next) {
 		var error = new Error('Access denied!');
 		error.status = 403;
 		next(error);
 	});
 
 	// Internal server error (500)
-	app.get(/^\/(admin\/)?500(\/)?$/, function (request, response, next) {
+	app.get('/500', function (request, response, next) {
 		var error = new Error('You\'ve requested the error page. Doh!');
 		error.status = 500;
 		next(error);
@@ -129,7 +81,7 @@ module.exports = function () {
 
 		if (request.accepts('html')) {
 			response.render('404', {
-				url: utils.getAbsoluteUrl(request),
+				url: urlUtils.getAbsoluteUrl(request),
 				page: constants.NOT_FOUND_PAGE_KEY,
 				method: request.method
 			});
@@ -145,8 +97,8 @@ module.exports = function () {
 
 	// Middleware to call when errors are present
 	app.use(function(error, request, response, next) {
-		render.overrideErrorRender(error, request, response);
-		utils.renderErrorPage(error, request, response);
+		renderOverride.errors(error, request, response, config);
+		expressUtils.renderErrorPage(error, request, response, config);
 	});
 
 };

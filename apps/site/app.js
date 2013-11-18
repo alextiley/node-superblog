@@ -6,13 +6,14 @@ module.exports = function (config, mongoose, context) {
 		app = express();
 
 	// Express configuration
-	//require(_sitePath.config + 'express')();
+	// require(paths.app.config + 'express')(app, config, mongoose);
 
-	// Passport configuration
-	//require(app.get('paths').config + 'passport')();
+	// Pull in app specific mongoose schema definitions
+	//bootstrap.getAllModels(paths.app.models, config, mongoose, app, context);
 
 	// Dynamically pull in the app's controllers
 	//bootstrap.getAllControllers(site, mongoose, context);
+	
 	return app;
 
 };

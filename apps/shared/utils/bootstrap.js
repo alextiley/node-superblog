@@ -56,7 +56,16 @@ self.getAllApps = function (app, config, mongoose) {
 };
 
 /* 
- *	Loops over all files in the controllers directory and includes them (invoking .controller)
+ *	Loops over all files in a models directory and includes them (invoking .model)
+ */
+self.getAllModels = function (path, config, mongoose, app, context) {
+	self.requireAll(path, function () {
+		this.model(config, mongoose, app, context);
+	});
+};
+
+/* 
+ *	Loops over all files in a controllers directory and includes them (invoking .controller)
  */
 self.getAllControllers = function (app, config, mongoose, context) {
 	self.requireAll(config.paths.app.controllers, function () {

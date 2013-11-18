@@ -7,7 +7,13 @@ module.exports = function () {
 	 *  url: the url to modify
 	 */
 	utils.removeQueryAndHashFromUrl = function (url) {
-		return url.split('?')[0].split('#')[0];
+		if (url.indexOf('?') > -1) {
+			url = url.split('?')[0];
+		}
+		if (url.indexOf('#') > -1) {
+			url = url.split('#')[0];
+		}
+		return url;
 	};
 
 	/*
