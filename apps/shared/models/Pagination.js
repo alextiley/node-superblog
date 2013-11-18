@@ -1,8 +1,6 @@
 module.exports.model = function (config, mongoose) {
 	
-	var constants = require(config.paths.shared.utils + 'constants'),
-		urlUtils = require(config.paths.shared.utils + 'url'),
-		Schema = mongoose.Schema,
+	var Schema = mongoose.Schema,
 		ObjectId = Schema.Types.ObjectId,
 		PaginationSchema;
 
@@ -25,28 +23,40 @@ module.exports.model = function (config, mongoose) {
 		lastUrl: String
 	});
 
-	PaginationSchema.methods.construct = function (page, results, count, requestUrl) {
+	/*
+		When called this static method will return a new Pagination object.
+		This method will calculate all of the page data, based on the args.
 
-		var totalPages = this.constructor.calculateTotalPages(results, count),
-			next = this.constructor.calculateNextPage(page, totalPages),
-			previous = this.constructor.calculatePrevPage(page);
+			var Pagination = mongoose.model('Pagination'),
+				paging = Pagination.get(1, 20, 634, '/posts?page=1&results=20');
+	*/
+	PaginationSchema.statics.get = function (page, results, count, requestUrl) {
 
-		this.previous = previous;
-		this.current = page;
-		this.next = next;
-		this.first = 1;
-		this.last = totalPages;
-		this.firstItem = this.constructor.calculateFirstPosition(page, results);
-		this.lastItem = this.constructor.calculateLastPosition(page, results, count);
-		this.totalPages = totalPages;
-		this.totalResults = count;
-		this.resultsPerPage = results;
-		this.baseUrl = urlUtils.removeQueryAndHashFromUrl(requestUrl);
-		this.previousUrl = this.getPageUrl(previous, results);
-		this.currentUrl = this.getPageUrl(page, results);
-		this.nextUrl = this.getPageUrl(next, results);
-		this.firstUrl = this.getPageUrl(1, results);
-		this.lastUrl = this.getPageUrl(totalPages, results);
+		var urlUtils = require(config.paths.shared.utils + 'url'),
+			baseUrl = urlUtils.removeQueryAndHashFromUrl(requestUrl),
+			totalPages = this.calculateTotalPages(results, count),
+			next = this.calculateNextPage(page, totalPages),
+			previous = this.calculatePrevPage(page),
+			paging = new this();
+
+		paging.previous = previous;
+		paging.current = page;
+		paging.next = next;
+		paging.first = 1;
+		paging.last = totalPages;
+		paging.firstItem = this.calculateFirstPosition(page, results);
+		paging.lastItem = this.calculateLastPosition(page, results, count);
+		paging.totalPages = totalPages;
+		paging.totalResults = count;
+		paging.resultsPerPage = results;
+		paging.baseUrl = baseUrl;
+		paging.previousUrl = this.getPageUrl(previous, results, baseUrl);
+		paging.currentUrl = this.getPageUrl(page, results, baseUrl);
+		paging.nextUrl = this.getPageUrl(next, results, baseUrl);
+		paging.firstUrl = this.getPageUrl(1, results, baseUrl);
+		paging.lastUrl = this.getPageUrl(totalPages, results, baseUrl);
+
+		return paging;
 	}
 
 	PaginationSchema.statics.calculateTotalPages = function (results, count) {
@@ -82,14 +92,15 @@ module.exports.model = function (config, mongoose) {
 		return page;
 	}
 
-	PaginationSchema.methods.getPageUrl = function (page, results) {
+	PaginationSchema.statics.getPageUrl = function (page, results, baseUrl) {
 
-		var requestUrl = null,
+		var constants = require(config.paths.shared.utils + 'constants'),
+			requestUrl = null,
 			isDefaultPage;
 
 		if (page !== null) {
 
-			requestUrl = this.baseUrl;
+			requestUrl = baseUrl;
 			isDefaultPage = page === constants.DEFAULT_PAGE;
 			
 			if (!isDefaultPage) {

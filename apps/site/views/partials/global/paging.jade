@@ -27,7 +27,7 @@ if paging.totalPages > 1
 			- for (var prevPage = paging.current - 4; prevPage < paging.current; prevPage++)
 				if prevPage >= paging.first
 					li
-						a(href="#{paging.getPageUrl(prevPage, paging.resultsPerPage)}") #{prevPage}
+						a(href="#{paging.getPageUrl(prevPage, paging.resultsPerPage, paging.baseUrl)}") #{prevPage}
 
 			//- Current page
 			li.current
@@ -37,7 +37,7 @@ if paging.totalPages > 1
 			- for (var nextPage = paging.current + 1; nextPage <= paging.current + 4; nextPage++)
 				if nextPage <= paging.last
 					li
-						a(href="#{paging.getPageUrl(nextPage, paging.resultsPerPage)}") #{nextPage}
+						a(href="#{paging.getPageUrl(nextPage, paging.resultsPerPage, paging.baseUrl)}") #{nextPage}
 
 			//- Show ellipsis if there's a gap
 			if paging.last - (paging.current + 5) > 0

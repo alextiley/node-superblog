@@ -26,11 +26,6 @@ mongoose.connection.once('open', function () {
 	// Pull in shared mongoose schema definitions
 	bootstrap.getAllModels(config.paths.shared.models, config, mongoose);
 
-	var Pagination = mongoose.model('Pagination'),
-		paging = new Pagination();
-	paging.construct(1,20,64,'/posts');
-	console.log(paging)
-
 	// Dynamically pull in each sub-app context
 	bootstrap.getAllApps(app, config, mongoose);
 
