@@ -1,6 +1,7 @@
 module.exports.model = function (config, mongoose) {
 	
-	var Schema = mongoose.Schema,
+	var urlUtils = require(config.paths.shared.utils + 'url'),
+		Schema = mongoose.Schema,
 		ObjectId = Schema.Types.ObjectId,
 		PaginationSchema;
 
@@ -23,17 +24,10 @@ module.exports.model = function (config, mongoose) {
 		lastUrl: String
 	});
 
-	/*
-		When called this static method will return a new Pagination object.
-		This method will calculate all of the page data, based on the args.
-
-			var Pagination = mongoose.model('Pagination'),
-				paging = Pagination.get(1, 20, 634, '/posts?page=1&results=20');
-	*/
+	// Consider refactoring URL generation
 	PaginationSchema.statics.get = function (page, results, count, requestUrl) {
 
-		var urlUtils = require(config.paths.shared.utils + 'url'),
-			baseUrl = urlUtils.removeQueryAndHashFromUrl(requestUrl),
+		var baseUrl = urlUtils.removeQueryAndHashFromUrl(requestUrl),
 			totalPages = this.calculateTotalPages(results, count),
 			next = this.calculateNextPage(page, totalPages),
 			previous = this.calculatePrevPage(page),
@@ -114,6 +108,14 @@ module.exports.model = function (config, mongoose) {
 
 		return requestUrl;
 	}
+
+	PaginationSchema.statics.getPageFromRequest = function (request) {
+		return urlUtils.getNumericQueryParam(request.query[constants.PAGE_PARAM], constants.DEFAULT_PAGE);
+	};
+
+	PaginationSchema.statics.getResultsFromRequest = function (request) {
+		return urlUtils.getNumericQueryParam(request.query[constants.RESULTS_PARAM], constants.DEFAULT_RESULTS);
+	};
 
 	mongoose.model('Pagination', PaginationSchema);
 };

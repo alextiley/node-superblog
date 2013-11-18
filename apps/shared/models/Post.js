@@ -1,6 +1,7 @@
 module.exports.model = function (config, mongoose) {
 	
-	var Schema = mongoose.Schema,
+	var Pagination = mongoose.model('Pagination'),
+		Schema = mongoose.Schema,
 		ObjectId = Schema.Types.ObjectId,
 		PostSchema;
 
@@ -59,60 +60,56 @@ module.exports.model = function (config, mongoose) {
 		}
 	});
 
-	PostSchema.statics = {
+	PostSchema.statics.getPostCount = function (request, response, rules, callback) {
 
-		getPostCount: function (request, response, rules, callback) {
+		var clazz = this;
 
-			var clazz = this;
+		this.count(rules, function (error, count) {
+			callback.call(clazz, count, error);
+		});
 
-			this.count(rules, function (error, count) {
-				callback.call(clazz, count, error);
+	};
+
+	// Needs refactoring and input validation
+	PostSchema.statics.getPost = function (request, response, callback) {
+
+		var rules = { visible: true, _id: request.params.id };
+
+		this.findOne(rules).exec(function (error, post) {
+			callback.call(post, post, error);
+		});
+
+	};
+
+	// Needs refactoring - ideally post count would be stored somewhere and queried once
+	PostSchema.statics.getAllVisiblePosts = function (request, response, callback) {
+		
+		var results = Pagination.getResultsFromRequest(request),
+			page = Pagination.getPageFromRequest(request),
+			rules = { visible: true },
+			totalPages,
+			paging,
+			start;
+
+		this.getPostCount(request, response, rules, function (count) {
+
+			// Now we have the post count, ensure request falls within page boundaries
+			totalPages = Pagination.calculateTotalPages(results, count);
+			page = Pagination.validatePageBoundaries(page, totalPages);
+			start = results * (page - 1),
+
+			// Do the actual get posts query with the request arguments
+			this.find(rules).skip(start).limit(results).exec(function (error, posts) {
+				paging = Pagination.get(page, results, count, request.url);
+				callback.call(posts, posts, paging, error);
 			});
 
-		},
+		});
 
-		// Needs refactoring and input validation
-		getPost: function (request, response, callback) {
+	};
 
-			var rules = { visible: true, _id: request.params.id };
-
-			this.findOne(rules).exec(function (error, post) {
-				callback.call(post, post, error);
-			});
-
-		},
-
-		// Needs refactoring - ideally post count would be stored somewhere and queried once
-		getAllVisiblePosts: function (request, response, callback) {
-			
-			var paginationUtils = require(config.paths.shared.utils + 'pagination'),
-				Pagination = require(app.get('paths').shared.models + 'Pagination'),
-				results = paginationUtils.getResultsFromRequest(request),
-				page = paginationUtils.getPageFromRequest(request),
-				rules = { visible: true },
-				totalPages,
-				start;
-
-			this.getPostCount(request, response, rules, function (count) {
-
-				// Now we have the post count, ensure request falls within page boundaries
-				totalPages = Pagination.prototype.calculateTotalPages(results, count);
-				page = Pagination.prototype.validatePageBoundaries(page, totalPages);
-				start = results * (page - 1),
-
-				// Do the actual get posts query with the request arguments
-				this.find(rules).skip(start).limit(results).exec(function (error, posts) {
-					callback.call(posts, posts, new Pagination(page, results, count, request.url), error);
-				});
-
-			});
-
-		},
-
-		getAllPosts: function (request, callback) {
-			return this.find(callback);
-		}
-
+	PostSchema.statics.getAllPosts = function (request, callback) {
+		return this.find(callback);
 	};
 
 	mongoose.model('Post', PostSchema);

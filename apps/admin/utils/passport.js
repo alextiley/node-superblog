@@ -1,4 +1,4 @@
-module.exports = function (config) {	
+module.exports = function () {	
 
 	// Consider moving this functionality into Administrator class as static methods
 	var passport = require('passport'),
@@ -44,4 +44,4 @@ module.exports = function (config) {
 	}
 
 	return utils;
-};
+}();

@@ -1,8 +1,8 @@
 module.exports.controller = function (app, config, mongoose, context) {
 
-	var validationUtils = require(config.paths.shared.utils + 'validation'),
-		Administrator = require(config.paths.app.models + 'Administrator')(config),
-		auth = require(config.paths.app.utils + 'passport');
+	var validation = require(config.paths.shared.utils + 'validation'),
+		auth = require(config.paths.app.utils + 'passport'),
+		Administrator = mongoose.model('Administrator');
 
 	// List all administrator accounts
 	app.get('/admin/administrators', function (request, response, next) {
@@ -35,7 +35,7 @@ module.exports.controller = function (app, config, mongoose, context) {
 			success: function () {
 				Administrator.create(request, response, function (mongooseError, administrator) {
 					if (mongooseError) {
-						request.flash('errors', validationUtils.getMongooseFlashErrors(request, mongooseError));
+						request.flash('errors', validation.utils.getMongooseFlashErrors(request, mongooseError));
 						response.redirect('/admin/administrators/create');
 					} else {
 						request.flash('success', 'The administrator \'' + administrator.username + '\' was successfully created.');

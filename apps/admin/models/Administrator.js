@@ -1,9 +1,9 @@
-function Post(config) {
+module.exports.model = function (config, mongoose) {
 
-	var validators = require(config.paths.shared.utils + 'validators'),
+	var validators = require(config.paths.shared.utils + 'validation').validators,
 		crypto = require('crypto'),
-		mongo = require('mongoose'),
-		Schema = mongo.Schema,
+		mongoose = require('mongoose'),
+		Schema = mongoose.Schema,
 		AdministratorSchema;
 
 	AdministratorSchema = new Schema({
@@ -147,7 +147,5 @@ function Post(config) {
 
 	};
 
-	return mongo.connection.model('Administrator', AdministratorSchema);
+	mongoose.model('Administrator', AdministratorSchema);
 }
-
-module.exports = Post;
