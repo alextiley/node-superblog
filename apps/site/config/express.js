@@ -100,6 +100,6 @@ module.exports = function (app, config, mongoose) {
 		renderOverride.errors(error, request, response, config);
 		expressUtils.renderErrorPage(error, request, response, config);
 	});
-	
+
 	return app;
 };

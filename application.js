@@ -29,8 +29,6 @@ mongoose.connection.once('open', function () {
 	// Dynamically pull in each sub-app context
 	app = bootstrap.getAllApps(app, config, mongoose);
 
-	console.log(app);
-
 	// Start the server
 	app.listen(config.server.port);
 

@@ -1,4 +1,4 @@
-module.exports = function (config, mongoose, context) {
+module.exports = function (config, mongoose) {
 
 	var bootstrap = require(config.paths.shared.utils + 'bootstrap'),
 		express = require('express'),
@@ -12,7 +12,7 @@ module.exports = function (config, mongoose, context) {
 	app = require(paths.app.config + 'express')(app, config, mongoose);
 
 	// Dynamically pull in the app's controllers
-	app = bootstrap.getAllControllers(app, config, mongoose, context);
+	app = bootstrap.getAllControllers(app, config, mongoose);
 	
 	return app;
 };

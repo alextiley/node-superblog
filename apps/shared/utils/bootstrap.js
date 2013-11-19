@@ -13,15 +13,14 @@ self.requireAll = function (path, moduleImportHook) {
 			}
 		}
 	});
-
 };
 
 /* 
- *	Configure paths for this app context
+ *	Configure paths for this app's app directory
  */
-self.configureAppPaths = function (context, paths) {
+self.configureAppPaths = function (appDir, paths) {
 
-	var contextPath = paths.apps + context + '/';
+	var contextPath = paths.apps + appDir + '/';
 
 	return {
 		root: contextPath,
@@ -35,9 +34,7 @@ self.configureAppPaths = function (context, paths) {
 	};
 };
 
-/* 
- *	Iterates over each folder in /apps/ (except 'shared'), configured paths and then includes app.js
- */
+/*
 self.getAllApps = function (app, config, mongoose) {
 
 	var extend = require('node.extend'),
@@ -63,6 +60,51 @@ self.getAllApps = function (app, config, mongoose) {
 
 	return app;
 };
+*/
+
+/* 
+ *	Includes all apps defined in /apps.json
+ */
+self.getAllApps = function (mainApp, mainConfig, mongoose) {
+
+	var apps = require(mainConfig.paths.root + '/apps.json').apps,
+		extend = require('node.extend'),
+		appPath, config, app;
+	
+	for (app in apps) {
+
+		if (apps.hasOwnProperty(app)) {
+		
+			app = apps[app];
+			appPath = mainConfig.paths.apps + app.directory;
+
+			if (app.directory !== 'shared') {
+				
+				if (fs.lstatSync(appPath).isDirectory()) {
+
+					config = extend(true, {}, mainConfig);
+					config.paths.app = self.configureAppPaths(app.directory, config.paths);
+					config.app = app;
+
+					try {
+						mainApp.use(app.path, require(config.paths.app.root + 'app')(config, mongoose));
+					} catch (error) {
+						throw(error);
+					}
+
+				} else {
+					throw new Error('Cannot find directory: \'' + app.directory + '\', full path: \'' + appPath + '\'.');
+				}
+
+			} else {
+				throw new Error('Cannot use \'shared\' directory as a sub-app. Directory: \'shared\' was not included.');
+			}
+
+		}
+	};
+
+	return mainApp;
+};
 
 /* 
  *	Loops over all files in a models directory and includes them (invoking .model)
@@ -72,7 +114,7 @@ self.getAllModels = function (path, config, mongoose, app) {
 	self.requireAll(path, function () {
 		this.model(config, mongoose, app);
 	});
-	
+
 	return mongoose;
 };
 
@@ -80,7 +122,7 @@ self.getAllModels = function (path, config, mongoose, app) {
  *	Loops over all files in a controllers directory and includes them (invoking .controller)
  */
 self.getAllControllers = function (app, config, mongoose, context) {
-
+	
 	self.requireAll(config.paths.app.controllers, function () {
 		this.controller(app, config, mongoose, context);
 	});

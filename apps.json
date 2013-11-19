@@ -1,0 +1,12 @@
+{
+	"apps": {
+		"admin": {
+			"directory": "admin",
+			"path": "/admin"
+		},
+		"site": {
+			"directory": "site",
+			"path": "/"
+		}
+	}
+}

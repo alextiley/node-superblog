@@ -73,7 +73,7 @@ self.getCommonRouteData = function (view, locals, request, response, config) {
 };
 
 self.overrideRender = function (request, response, config, error) {
-	console.log(config.paths);
+
 	var render = response.render;
 
 	response.render = function (view, locals, callback) {

@@ -1,4 +1,4 @@
-module.exports.controller = function (app, config, mongoose, context) {
+module.exports.controller = function (app, config, mongoose) {
 
 	app.get('/logout', function (request, response, next) {
 		request.logOut();

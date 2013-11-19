@@ -1,4 +1,4 @@
-module.exports.controller = function (app, config, mongoose, context) {
+module.exports.controller = function (app, config, mongoose) {
 
 	var validation = require(config.paths.shared.utils + 'validation'),
 		auth = require(config.paths.app.utils + 'passport'),
