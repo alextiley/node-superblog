@@ -24,10 +24,12 @@ mongoose.connection.once('open', function () {
 	bootstrap = require(config.paths.shared.utils + 'bootstrap');
 
 	// Pull in shared mongoose schema definitions
-	bootstrap.getAllModels(config.paths.shared.models, config, mongoose);
+	mongoose = bootstrap.getAllModels(config.paths.shared.models, config, mongoose);
 
 	// Dynamically pull in each sub-app context
-	bootstrap.getAllApps(app, config, mongoose);
+	app = bootstrap.getAllApps(app, config, mongoose);
+
+	console.log(app);
 
 	// Start the server
 	app.listen(config.server.port);

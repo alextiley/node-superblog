@@ -5,7 +5,7 @@ module.exports.controller = function (app, config, mongoose, context) {
 		Administrator = mongoose.model('Administrator');
 
 	// List all administrator accounts
-	app.get('/admin/administrators', function (request, response, next) {
+	app.get('/administrators', function (request, response, next) {
 		auth.ensureAuthenticated(request, response, {
 			success: function () {
 				Administrator.getAll(function (error, administrators) {
@@ -21,7 +21,7 @@ module.exports.controller = function (app, config, mongoose, context) {
 	});
 
 	// Create new administrator account page (GET)
-	app.get('/admin/administrators/create', function (request, response, next) {
+	app.get('/administrators/create', function (request, response, next) {
 		auth.ensureAuthenticated(request, response, {
 			success: function () {
 				response.render('administrator_create');
@@ -30,16 +30,16 @@ module.exports.controller = function (app, config, mongoose, context) {
 	});
 
 	// Create a new administrator account (POST)
-	app.post('/admin/administrators/create', function (request, response, next) {
+	app.post('/administrators/create', function (request, response, next) {
 		auth.ensureAuthenticated(request, response, {
 			success: function () {
 				Administrator.create(request, response, function (mongooseError, administrator) {
 					if (mongooseError) {
 						request.flash('error', validation.utils.getMongooseFlashErrors(request, mongooseError));
-						response.redirect('/admin/administrators/create');
+						response.redirect('administrators/create');
 					} else {
 						request.flash('success', 'The administrator \'' + administrator.username + '\' was successfully created.');
-						response.redirect('/admin/administrators');
+						response.redirect('administrators');
 					}
 				});
 			}
@@ -47,7 +47,7 @@ module.exports.controller = function (app, config, mongoose, context) {
 	});
 
 	// Delete an existing administrator account
-	app.delete('/admin/administrators/delete/:id', function (request, response, next) {
+	app.delete('/administrators/delete/:id', function (request, response, next) {
 		auth.ensureAuthenticated(request, response, {
 			success: function () {
 				
@@ -56,7 +56,7 @@ module.exports.controller = function (app, config, mongoose, context) {
 	});
 
 	// Update an administrator account
-	app.put('/admin/administrators/update/:id', function (request, response, next) {
+	app.put('/administrators/update/:id', function (request, response, next) {
 		auth.ensureAuthenticated(request, response, {
 			success: function () {
 				

@@ -118,4 +118,5 @@ module.exports = function (app, config, mongoose) {
 		expressUtils.renderErrorPage(error, request, response, config);
 	});
 
+	return app;
 };

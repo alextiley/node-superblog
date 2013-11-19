@@ -42,7 +42,7 @@ self.getAllApps = function (app, config, mongoose) {
 
 	var extend = require('node.extend'),
 		thisExpressApp,
-		contextRoot = '/',
+		contextRoot,
 		appConfig;
 
 	fs.readdirSync(config.paths.apps).forEach(function (context) {	
@@ -51,6 +51,8 @@ self.getAllApps = function (app, config, mongoose) {
 			appConfig = extend(true, {}, config);
 			appConfig.paths.app = self.configureAppPaths(context, appConfig.paths);
 
+			contextRoot = '/';
+
 			if (context !== 'default') {
 				contextRoot += context;
 			}
@@ -58,24 +60,32 @@ self.getAllApps = function (app, config, mongoose) {
 			app.use(contextRoot, require(appConfig.paths.app.root + 'app')(appConfig, mongoose, context));
 		}
 	});
+
+	return app;
 };
 
 /* 
  *	Loops over all files in a models directory and includes them (invoking .model)
  */
-self.getAllModels = function (path, config, mongoose, app, context) {
+self.getAllModels = function (path, config, mongoose, app) {
+	
 	self.requireAll(path, function () {
-		this.model(config, mongoose, app, context);
+		this.model(config, mongoose, app);
 	});
+	
+	return mongoose;
 };
 
 /* 
  *	Loops over all files in a controllers directory and includes them (invoking .controller)
  */
 self.getAllControllers = function (app, config, mongoose, context) {
+
 	self.requireAll(config.paths.app.controllers, function () {
 		this.controller(app, config, mongoose, context);
 	});
+
+	return app;
 };
 
 module.exports = self;
