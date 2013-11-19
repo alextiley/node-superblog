@@ -41,38 +41,48 @@ self.getAllApps = function (mainApp, mainConfig, mongoose) {
 
 	var mounts = require(mainConfig.paths.root + '/mounts.json').mounts,
 		extend = require('node.extend'),
-		appPath, config, app;
+		rootMount, appPath, config, app, i;
 	
-	for (app in mounts) {
+	// REFACTOR - this is used to order mounts so that '/' is always the final mount point
+	// This is due to how connect mounts routes - sub-app routes will not work if / is mounted first
+	// Should probably validate that there's only one mount.path === '/'...
+	rootMount = mounts.filter(function (mount) {
+		return mount.path === '/';
+	})[0];
 
-		if (mounts.hasOwnProperty(app)) {
-		
-			app = mounts[app];
-			appPath = mainConfig.paths.apps + app.directory;
+	mounts = mounts.filter(function (mount) {
+		return mount.path !== '/';
+	});
 
-			if (app.directory !== 'shared') {
-				
-				if (fs.lstatSync(appPath).isDirectory()) {
+	mounts.push(rootMount);
 
-					config = extend(true, {}, mainConfig);
-					config.paths.app = self.configureAppPaths(app.directory, config.paths);
-					config.app = app;
+	for (i = 0; i < mounts.length; i++) {
 
-					try {
-						mainApp.use(app.path, require(config.paths.app.root + 'app')(config, mongoose));
-					} catch (error) {
-						throw(error);
-					}
+		app = mounts[i];
+		appPath = mainConfig.paths.apps + app.directory;
 
-				} else {
-					throw new Error('Cannot find directory: \'' + app.directory + '\', full path: \'' + appPath + '\'.');
+		if (app.directory !== 'shared') {
+			
+			if (fs.lstatSync(appPath).isDirectory()) {
+
+				config = extend(true, {}, mainConfig);
+				config.paths.app = self.configureAppPaths(app.directory, config.paths);
+				config.app = app;
+
+				try {
+					mainApp.use(app.path, require(config.paths.app.root + 'app')(config, mongoose));
+				} catch (error) {
+					throw(error);
 				}
 
 			} else {
-				throw new Error('Cannot use \'shared\' directory as a sub-app. Directory: \'shared\' was not included.');
+				throw new Error('Cannot find directory: \'' + app.directory + '\', full path: \'' + appPath + '\'.');
 			}
 
+		} else {
+			throw new Error('Cannot use \'shared\' directory as a sub-app. Directory: \'shared\' was not included.');
 		}
+
 	};
 
 	return mainApp;

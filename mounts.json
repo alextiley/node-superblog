@@ -1,12 +1,12 @@
 {
-	"mounts": {
-		"admin": {
-			"directory": "admin",
-			"path": "/admin"
-		},
-		"site": {
+	"mounts": [
+		{
 			"directory": "site",
 			"path": "/"
+		},
+		{
+			"directory": "admin",
+			"path": "/admin"
 		}
-	}
+	]
 }
