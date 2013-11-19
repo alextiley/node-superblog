@@ -1,5 +1,5 @@
 {
-	"apps": {
+	"mounts": {
 		"admin": {
 			"directory": "admin",
 			"path": "/admin"

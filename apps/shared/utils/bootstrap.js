@@ -34,48 +34,20 @@ self.configureAppPaths = function (appDir, paths) {
 	};
 };
 
-/*
-self.getAllApps = function (app, config, mongoose) {
-
-	var extend = require('node.extend'),
-		thisExpressApp,
-		contextRoot,
-		appConfig;
-
-	fs.readdirSync(config.paths.apps).forEach(function (context) {	
-		if (fs.lstatSync(config.paths.apps + context).isDirectory() && context !== 'shared') {
-			
-			appConfig = extend(true, {}, config);
-			appConfig.paths.app = self.configureAppPaths(context, appConfig.paths);
-
-			contextRoot = '/';
-
-			if (context !== 'default') {
-				contextRoot += context;
-			}
-
-			app.use(contextRoot, require(appConfig.paths.app.root + 'app')(appConfig, mongoose, context));
-		}
-	});
-
-	return app;
-};
-*/
-
 /* 
  *	Includes all apps defined in /apps.json
  */
 self.getAllApps = function (mainApp, mainConfig, mongoose) {
 
-	var apps = require(mainConfig.paths.root + '/apps.json').apps,
+	var mounts = require(mainConfig.paths.root + '/mounts.json').mounts,
 		extend = require('node.extend'),
 		appPath, config, app;
 	
-	for (app in apps) {
+	for (app in mounts) {
 
-		if (apps.hasOwnProperty(app)) {
+		if (mounts.hasOwnProperty(app)) {
 		
-			app = apps[app];
+			app = mounts[app];
 			appPath = mainConfig.paths.apps + app.directory;
 
 			if (app.directory !== 'shared') {
