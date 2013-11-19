@@ -18,5 +18,4 @@ module.exports = function (config, mongoose, context) {
 	bootstrap.getAllControllers(app, config, mongoose, context);
 	
 	return app;
-
 };

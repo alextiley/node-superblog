@@ -60,18 +60,20 @@ self.getCommonRouteData = function (view, locals, request, response, config) {
 	locals.common[constants.PAGE_ID] = self.getPageIdFromViewPath(view);
 	locals.common[constants.BODY_CLASSES] = self.getHtmlBodyClasses(request, view);
 
-	locals.messages = {
-		success: request.flash(constants.FLASH_SUCCESS),
-		errors: request.flash(constants.FLASH_ERROR),
-		warning: request.flash(constants.FLASH_WARNING),
-		info: request.flash(constants.FLASH_INFO)
-	};
+	if (request.flash) {
+		locals.messages = {
+			success: request.flash(constants.FLASH_SUCCESS),
+			errors: request.flash(constants.FLASH_ERROR),
+			warning: request.flash(constants.FLASH_WARNING),
+			info: request.flash(constants.FLASH_INFO)
+		};
+	}
 
 	return locals;
 };
 
 self.overrideRender = function (request, response, config, error) {
-
+	console.log(config.paths);
 	var render = response.render;
 
 	response.render = function (view, locals, callback) {

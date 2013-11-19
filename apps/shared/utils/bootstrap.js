@@ -21,17 +21,17 @@ self.requireAll = function (path, moduleImportHook) {
  */
 self.configureAppPaths = function (context, paths) {
 
-	var contextRoot = paths.apps + context + '/';
+	var contextPath = paths.apps + context + '/';
 
 	return {
-		root: contextRoot,
-		config: contextRoot + 'config/',
-		middleware: contextRoot + 'config/middleware/',
-		utils: contextRoot + 'utils/',
-		models: contextRoot + 'models/',
-		views: contextRoot + 'views/',
-		controllers: contextRoot + 'controllers/',
-		assets: contextRoot + 'views/assets/'
+		root: contextPath,
+		config: contextPath + 'config/',
+		middleware: contextPath + 'config/middleware/',
+		utils: contextPath + 'utils/',
+		models: contextPath + 'models/',
+		views: contextPath + 'views/',
+		controllers: contextPath + 'controllers/',
+		assets: contextPath + 'views/assets/'
 	};
 };
 
@@ -42,6 +42,7 @@ self.getAllApps = function (app, config, mongoose) {
 
 	var extend = require('node.extend'),
 		thisExpressApp,
+		contextRoot = '/',
 		appConfig;
 
 	fs.readdirSync(config.paths.apps).forEach(function (context) {	
@@ -50,7 +51,11 @@ self.getAllApps = function (app, config, mongoose) {
 			appConfig = extend(true, {}, config);
 			appConfig.paths.app = self.configureAppPaths(context, appConfig.paths);
 
-			app.use(require(appConfig.paths.app.root + 'app')(appConfig, mongoose, context));
+			if (context !== 'default') {
+				contextRoot += context;
+			}
+
+			app.use(contextRoot, require(appConfig.paths.app.root + 'app')(appConfig, mongoose, context));
 		}
 	});
 };

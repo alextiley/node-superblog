@@ -1,5 +1,5 @@
 module.exports = function (app, config, mongoose) {
-
+	
 	var paths = config.paths,
 		express = require('express'),
 		urlUtils = require(paths.shared.utils + 'url'),
@@ -100,5 +100,5 @@ module.exports = function (app, config, mongoose) {
 		renderOverride.errors(error, request, response, config);
 		expressUtils.renderErrorPage(error, request, response, config);
 	});
-
+	
 };

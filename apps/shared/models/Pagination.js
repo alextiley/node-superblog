@@ -1,6 +1,7 @@
 module.exports.model = function (config, mongoose) {
 	
-	var urlUtils = require(config.paths.shared.utils + 'url'),
+	var constants = require(config.paths.shared.utils + 'constants'),
+		urlUtils = require(config.paths.shared.utils + 'url'),
 		Schema = mongoose.Schema,
 		ObjectId = Schema.Types.ObjectId,
 		PaginationSchema;
@@ -88,8 +89,7 @@ module.exports.model = function (config, mongoose) {
 
 	PaginationSchema.statics.getPageUrl = function (page, results, baseUrl) {
 
-		var constants = require(config.paths.shared.utils + 'constants'),
-			requestUrl = null,
+		var requestUrl = null,
 			isDefaultPage;
 
 		if (page !== null) {

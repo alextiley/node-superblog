@@ -25,19 +25,19 @@ module.exports = function (app, config, mongoose) {
 	app.use(flash());
 
 	// Set the assets path
-	app.use('/admin', express.static(paths.app.assets));
+	app.use(express.static(paths.app.assets));
 
 	// Set the base directory
-	app.use('/admin', function (request, response, next) {
+	app.use(function (request, response, next) {
 		app.locals.basedir = paths.app.views;
 		next();
 	});
 
 	// Sets the favicon path (default is an express favicon)
-	app.use('/admin', express.favicon(paths.app.assets + 'img/favicon.ico'));
+	app.use(express.favicon(paths.app.assets + 'img/favicon.ico'));
 
 	// Set the base view path
-	app.use('/admin', function (request, response, next) {
+	app.use(function (request, response, next) {
 		app.set('views', paths.app.views);
 		next();
 	});
@@ -71,19 +71,19 @@ module.exports = function (app, config, mongoose) {
 
 	// Page not found (404)
 	// ---- next() will trigger a 404 as no routes match after this
-	app.get('/admin/404', function (request, response, next) {
+	app.get('/404', function (request, response, next) {
 		next();
 	});
 
 	// Access denied (403)
-	app.get('/admin/403', function (request, response, next) {
+	app.get('/403', function (request, response, next) {
 		var error = new Error('Access denied!');
 		error.status = 403;
 		next(error);
 	});
 
 	// Internal server error (500)
-	app.get('/admin/500', function (request, response, next) {
+	app.get('/500', function (request, response, next) {
 		var error = new Error('You\'ve requested the error page. Doh!');
 		error.status = 500;
 		next(error);
