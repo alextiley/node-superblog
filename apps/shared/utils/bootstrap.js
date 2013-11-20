@@ -79,7 +79,7 @@ self.getMounts = function (app, config, mongoose) {
 
 	var mounts = self.sortMounts(require(config.paths.root + '/mounts.json').mounts),
 		mounted = [], appPath, mount, i;
-	console.log(mounts);
+
 	for (i = 0; i < mounts.length; i++) {
 
 		mount = mounts[i];
