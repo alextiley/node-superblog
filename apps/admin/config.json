@@ -4,6 +4,9 @@
 			"url": "mongodb://localhost/blog",
 			"username": "blog",
 			"password": "password"
+		},
+		"cookies": {
+			"secret": "i-love-cookies"
 		}
 	},
 	"staging": {
@@ -11,6 +14,9 @@
 			"url": "",
 			"username": "",
 			"password": ""
+		},
+		"cookies": {
+			"secret": ""
 		}
 	},
 	"production": {
@@ -18,6 +24,9 @@
 			"url": "",
 			"username": "",
 			"password": ""
+		},
+		"cookies": {
+			"secret": ""
 		}
 	}
 }
