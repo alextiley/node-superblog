@@ -126,10 +126,10 @@ self.getModels = function (path, config, db, app) {
 /* 
  *	Loops over all files in a controllers directory and includes them (invoking .controller)
  */
-self.getControllers = function (app, config, db, context) {
+self.getControllers = function (app, config, db) {
 	
 	self.requireAll(config.paths.app.controllers, function () {
-		this.controller(app, config, db, context);
+		this.controller(app, config, db);
 	});
 
 	return app;
