@@ -6,7 +6,7 @@ module.exports = function (config, mongoose, context) {
 		app = express();
 
 	// Pull in app specific mongoose schema definitions
-	mongoose = bootstrap.getAllModels(paths.app.models, config, mongoose, app);
+	mongoose = bootstrap.getModels(paths.app.models, config, mongoose, app);
 
 	// Express configuration
 	app = require(paths.app.config + 'express')(app, config, mongoose);
@@ -15,7 +15,7 @@ module.exports = function (config, mongoose, context) {
 	require(paths.app.config + 'passport')(config, mongoose);
 
 	// Dynamically pull in the app's controllers
-	app = bootstrap.getAllControllers(app, config, mongoose, context);
+	app = bootstrap.getControllers(app, config, mongoose, context);
 	
 	return app;
 };

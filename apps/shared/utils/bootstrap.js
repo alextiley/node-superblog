@@ -34,9 +34,10 @@ self.configureAppPaths = function (appDir, paths) {
 	};
 };
 
-// This is required to order mounts so that '/' is always the final mount point
-// This is due to how connect mounts routes - sub-app routes will not work if / is mounted first
-// Should probably validate that there's only one mount.path === '/'...	
+/*
+ *	Order all mounts configured in mounts.json so that '/' is always the final mount point
+ *	Mounted sub-app routes will not work if / is mounted first (perhaps a bug in express?)
+ */
 self.sortMounts = function (mounts) {
 
 	var rootMount,
@@ -50,56 +51,63 @@ self.sortMounts = function (mounts) {
 			}
 		}
 	}
+
 	return mounts;
 }
+
+self.initMount = function (app, host, masterConfig, mongoose) {
+	
+	var extend = require('node.extend'), // deprecated, needs updating
+		config = extend(true, {}, masterConfig);
+	
+	config.paths.app = self.configureAppPaths(app.directory, config.paths);
+	config.app = app;
+
+	try {
+		host.use(app.path, require(config.paths.app.root + 'app')(config, mongoose));
+	} catch (error) {
+		throw(error);
+	}
+
+	return host;
+};
 
 /* 
  *	Includes all apps defined in /apps.json
  */
-self.getAllApps = function (mainApp, mainConfig, mongoose) {
+self.getMounts = function (app, config, mongoose) {
 
-	var mounts = require(mainConfig.paths.root + '/mounts.json').mounts,
-		extend = require('node.extend'),
-		appPath, config, app, i;
-	
-	mounts = self.sortMounts(mounts);
-
+	var mounts = self.sortMounts(require(config.paths.root + '/mounts.json').mounts),
+		mounted = [], appPath, mount, i;
+	console.log(mounts);
 	for (i = 0; i < mounts.length; i++) {
 
-		app = mounts[i];
-		appPath = mainConfig.paths.apps + app.directory;
+		mount = mounts[i];
+		appPath = config.paths.apps + mount.directory;
 
-		if (app.directory !== 'shared') {
-			
+		if (mount.directory !== 'shared') {
 			if (fs.lstatSync(appPath).isDirectory()) {
-
-				config = extend(true, {}, mainConfig);
-				config.paths.app = self.configureAppPaths(app.directory, config.paths);
-				config.app = app;
-
-				try {
-					mainApp.use(app.path, require(config.paths.app.root + 'app')(config, mongoose));
-				} catch (error) {
-					throw(error);
+				if (mounted.indexOf(mount.directory) === -1) {
+					app = self.initMount(mount, app, config, mongoose);
+					mounted.push(mount.directory);
+					console.info('sub-app \'%s\' was successfully mounted! \n', mount.directory);
+				} else {				
+					throw new Error('Unable to mount sub-app: \'' + mount.directory +  '\'. A sub-app with the same name has already been mounted.');
 				}
-
-			} else {
-				throw new Error('Cannot find directory: \'' + app.directory + '\', full path: \'' + appPath + '\'.');
 			}
-
 		} else {
-			throw new Error('Cannot use \'shared\' directory as a sub-app. Directory: \'shared\' was not included.');
+			throw new Error('Cannot use \'shared\' directory as a sub-app. Directory: \'shared\' is reserved and can not be included.');
 		}
 
 	};
 
-	return mainApp;
+	return app;
 };
 
 /* 
  *	Loops over all files in a models directory and includes them (invoking .model)
  */
-self.getAllModels = function (path, config, mongoose, app) {
+self.getModels = function (path, config, mongoose, app) {
 	
 	self.requireAll(path, function () {
 		this.model(config, mongoose, app);
@@ -111,7 +119,7 @@ self.getAllModels = function (path, config, mongoose, app) {
 /* 
  *	Loops over all files in a controllers directory and includes them (invoking .controller)
  */
-self.getAllControllers = function (app, config, mongoose, context) {
+self.getControllers = function (app, config, mongoose, context) {
 	
 	self.requireAll(config.paths.app.controllers, function () {
 		this.controller(app, config, mongoose, context);
