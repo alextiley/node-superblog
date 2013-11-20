@@ -6,8 +6,10 @@ module.exports = function (config) {
 		app = express(),
 		db;
 
+	// Application specific configuration
 	config = bootstrap.getAppConfig(config);
 
+	// Create a mongodb connection
 	db = mongoose.createConnection(config.db.url, function (error) {
 		if (error) throw error;
 	});

@@ -1,6 +1,5 @@
 var env = process.env.NODE_ENV || 'development',
 	express = require('express'),
-	app = express(),
 	config = {},
 	bootstrap;
 
@@ -20,4 +19,4 @@ config.mounts = require(config.paths.apps.mounts);
 bootstrap = require(config.paths.core.bootstrap);
 
 // Dynamically pull in each sub-app context
-bootstrap.getMounts(app, config);
+bootstrap.getMounts(express(), config);
