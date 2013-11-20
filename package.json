@@ -2,10 +2,16 @@
 	"name": "node-superblog",
 	"description": "A blog application written with node.js, complete with an admin interface.",
 	"version": "0.0.1",
+	"author": "Alex Tiley",
+	"keywords": [
+		"blog",
+		"mvc"
+	],
 	"private": false,
 	"dependencies": {
 		"express": "latest",
 		"mongoose": "latest",
+		"node.extend": "latest",
 		"connect-mongo": "latest",
 		"connect-flash": "latest",
 		"jade": "latest",

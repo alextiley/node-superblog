@@ -1,42 +1,35 @@
-var mongo = require('mongoose'),
-	utils;
+var express = require('express'),
+	mongoose = require('mongoose'),
+	app = module.exports = express(),
+	config = {},
+	bootstrap;
 
-// Set environment
-global.env = process.env.NODE_ENV || 'development';
-global.app = require('express')();
+// Set environment global
+global._env = process.env.NODE_ENV || 'development';
 
-// Global configuration (sets common paths, etc)
-require(__dirname + '/app/config/global')(__dirname);
+// Get path configuration
+config.paths = require(__dirname + '/apps/shared/config/paths')(__dirname);
 
 // Environment specific configuration
-require(app.get('paths').config + 'environment')[env]();
-
-// Application utility methods
-utils = require(app.get('paths').utils + 'app');
-
-// Express configuration
-require(app.get('paths').config + 'express')();
-
-// Passport configuration
-require(app.get('paths').config + 'passport')();
+config = require(config.paths.shared.config + _env)(config);
 
 // Bootstrap database connection
-mongo.connect(app.get('db').url);
+mongoose.connect(config.db.url, function (error) {
+	if (error) throw error;
+});
 
-// Start the server and include controllers
-mongo.connection.once('open', function () {
+// Only start the server if the db is up and running
+mongoose.connection.once('open', function () {
 	
-	// Bootstrap the front-end controllers
-	utils.requireAll(app.get('paths').site.controllers, function () {
-		this.controller();
-	});
+	bootstrap = require(config.paths.shared.utils + 'bootstrap');
 
-	// Load up the admin controllers
-	utils.requireAll(app.get('paths').controllers, function () {
-		this.controller();
-	});
+	// Pull in shared mongoose schema definitions
+	mongoose = bootstrap.getModels(config.paths.shared.models, config, mongoose);
 
-	// Start the application
-	app.listen(app.get('server').port);
+	// Dynamically pull in each sub-app context
+	app = bootstrap.getMounts(app, config, mongoose);
+
+	// Start the server
+	app.listen(config.server.port);
 
 });
