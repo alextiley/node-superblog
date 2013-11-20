@@ -10,8 +10,8 @@
 	"private": false,
 	"dependencies": {
 		"express": "latest",
+		"extend": "latest",
 		"mongoose": "latest",
-		"node.extend": "latest",
 		"connect-mongo": "latest",
 		"connect-flash": "latest",
 		"jade": "latest",

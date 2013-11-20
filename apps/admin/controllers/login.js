@@ -1,4 +1,4 @@
-module.exports.controller = function (app, config, mongoose) {
+module.exports.controller = function (app, config, db) {
 
 	var auth = require(config.paths.app.utils + 'passport');
 

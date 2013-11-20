@@ -1,6 +1,6 @@
-module.exports.controller = function (app, config, mongoose) {
+module.exports.controller = function (app, config, db) {
 
-	var Post = mongoose.model('Post');
+	var Post = db.model('Post');
 	
 	app.get('/posts', function (request, response) {
 		Post.getAllVisiblePosts(request, response, function (posts, paging) {

@@ -1,21 +1,33 @@
-module.exports = function (config, mongoose, context) {
+module.exports = function (config) {
 
-	var bootstrap = require(config.paths.shared.utils + 'bootstrap'),
+	var bootstrap = require(config.paths.core.bootstrap),
+		mongoose = require('mongoose'),
 		express = require('express'),
-		paths = config.paths,
-		app = express();
+		app = express(),
+		db;
 
-	// Pull in app specific mongoose schema definitions
-	mongoose = bootstrap.getModels(paths.app.models, config, mongoose, app);
+	config = bootstrap.getAppConfig(config);
 
-	// Express configuration
-	app = require(paths.app.config + 'express')(app, config, mongoose);
+	db = mongoose.createConnection(config.db.url, function (error) {
+		if (error) throw error;
+	});
 
-	// Passport configuration
-	require(paths.app.config + 'passport')(config, mongoose);
+	db.once('open', function () {
+		
+		// Pull in common and app specific models
+		db = bootstrap.getModels(config.paths.shared.models, config, db);
+		db = bootstrap.getModels(config.paths.app.models, config, db, app);
+		
+		// Express configuration
+		app = require(config.paths.app.config + 'express')(app, config);
 
-	// Dynamically pull in the app's controllers
-	app = bootstrap.getControllers(app, config, mongoose, context);
-	
+		// Passport configuration
+		require(config.paths.app.config + 'passport')(config, db);
+
+		// Pull in app specific controllers
+		app = bootstrap.getControllers(app, config, db);
+
+	});
+
 	return app;
 };

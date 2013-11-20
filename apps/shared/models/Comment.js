@@ -1,6 +1,6 @@
-module.exports.model = function (config, mongoose) {
+module.exports.model = function (config, db) {
 
-	var Schema = mongoose.Schema,
+	var Schema = require('mongoose').Schema,
 		ObjectId = Schema.Types.ObjectId,
 		CommentSchema;
 
@@ -35,5 +35,5 @@ module.exports.model = function (config, mongoose) {
 		}
 	});
 
-	mongoose.model('Comment', CommentSchema);
+	db.model('Comment', CommentSchema);
 }

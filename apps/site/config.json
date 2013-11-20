@@ -1,0 +1,23 @@
+{
+	"development": {
+		"db": {
+			"url": "mongodb://localhost/blog",
+			"username": "blog",
+			"password": "password"
+		}
+	},
+	"staging": {
+		"db": {
+			"url": "",
+			"username": "",
+			"password": ""
+		}
+	},
+	"production": {
+		"db": {
+			"url": "",
+			"username": "",
+			"password": ""
+		}
+	}
+}

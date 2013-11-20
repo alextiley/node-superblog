@@ -1,4 +1,4 @@
-module.exports = function (app, config, mongoose) {
+module.exports = function (app, config) {
 
 	var paths = config.paths,
 		express = require('express'),
@@ -46,8 +46,9 @@ module.exports = function (app, config, mongoose) {
 	app.use(express.cookieParser());
 
 	// Automatically parse request bodies (scopes post data to request.body)
-	app.use(express.bodyParser());
-	
+	app.use(express.json());
+	app.use(express.urlencoded());
+
 	// Allow HTTP method overrides (using _method hidden input)
 	app.use(express.methodOverride());
 

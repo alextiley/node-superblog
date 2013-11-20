@@ -1,4 +1,4 @@
-module.exports.controller = function (app, config, mongoose) {
+module.exports.controller = function (app, config, db) {
 
 	app.get('/home', function (request, response) {
 		response.redirect('/');

@@ -1,7 +1,7 @@
-module.exports = function (config, mongoose) {
+module.exports = function (config, db) {
 	
 	var LocalStrategy = require('passport-local').Strategy,
-		Administrator = mongoose.model('Administrator'),
+		Administrator = db.model('Administrator'),
 		passport = require('passport');
 
 	// This method initializes an active login by storing a

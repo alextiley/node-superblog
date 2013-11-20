@@ -1,9 +1,8 @@
-module.exports.model = function (config, mongoose) {
+module.exports.model = function (config, db) {
 
 	var validators = require(config.paths.shared.utils + 'validation').validators,
+		Schema = require('mongoose').Schema,
 		crypto = require('crypto'),
-		mongoose = require('mongoose'),
-		Schema = mongoose.Schema,
 		AdministratorSchema;
 
 	AdministratorSchema = new Schema({
@@ -103,17 +102,17 @@ module.exports.model = function (config, mongoose) {
 
 	AdministratorSchema.statics.getSalt = function (callback) {
 		crypto.randomBytes(256, callback);
-	}
+	};
 
 	AdministratorSchema.statics.getHash = function (phrase, salt, callback) {
 		crypto.pbkdf2(phrase, salt, 25000, 512, callback);
-	}
+	};
 
 	AdministratorSchema.statics.getAll = function (callback) {
 		this.find(function (error, administrators) {
 			callback.call(administrators, error, administrators);
 		});
-	}
+	};
 
 	AdministratorSchema.statics.getById = function (id, callback) {
 
@@ -147,5 +146,5 @@ module.exports.model = function (config, mongoose) {
 
 	};
 
-	mongoose.model('Administrator', AdministratorSchema);
+	db.model('Administrator', AdministratorSchema);
 }

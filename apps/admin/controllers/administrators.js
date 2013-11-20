@@ -1,8 +1,8 @@
-module.exports.controller = function (app, config, mongoose) {
+module.exports.controller = function (app, config, db) {
 
 	var validation = require(config.paths.shared.utils + 'validation'),
 		auth = require(config.paths.app.utils + 'passport'),
-		Administrator = mongoose.model('Administrator');
+		Administrator = db.model('Administrator');
 
 	// List all administrator accounts
 	app.get('/administrators', function (request, response, next) {

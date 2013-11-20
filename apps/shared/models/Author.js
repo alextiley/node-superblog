@@ -1,6 +1,6 @@
-module.exports.model = function (config, mongoose) {
+module.exports.model = function (config, db) {
 
-	var Schema = mongoose.Schema,
+	var Schema = require('mongoose').Schema,
 		ObjectId = Schema.Types.ObjectId,
 		AuthorSchema;
 
@@ -41,5 +41,5 @@ module.exports.model = function (config, mongoose) {
 		}
 	});
 
-	mongoose.model('Author', AuthorSchema);
+	db.model('Author', AuthorSchema);
 }

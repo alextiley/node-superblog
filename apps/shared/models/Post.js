@@ -1,7 +1,7 @@
-module.exports.model = function (config, mongoose) {
+module.exports.model = function (config, db) {
 	
-	var Pagination = mongoose.model('Pagination'),
-		Schema = mongoose.Schema,
+	var Pagination = db.model('Pagination'),
+		Schema = require('mongoose').Schema,
 		ObjectId = Schema.Types.ObjectId,
 		PostSchema;
 
@@ -112,5 +112,5 @@ module.exports.model = function (config, mongoose) {
 		return this.find(callback);
 	};
 
-	mongoose.model('Post', PostSchema);
+	db.model('Post', PostSchema);
 };

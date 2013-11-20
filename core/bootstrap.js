@@ -1,15 +1,18 @@
-var fs = require('fs'),
+var extend = require('extend'),
+	fs = require('fs'),
 	self = {};
 
-self.requireAll = function (path, moduleImportHook) {
+self.requireAll = function (path, callback) {
 		
 	var includeFile;
 
 	fs.readdirSync(path).forEach(function (file) {
 		if (file.substr(-3) === '.js') {
 			includeFile = require(path + file);
-			if (typeof moduleImportHook === 'function') {
-				moduleImportHook.call(includeFile);
+			if (typeof callback === 'function') {
+				callback.call(includeFile);
+			} else {
+				throw new Error('Argument \'callback\' was not supplied or is not a function.');
 			}
 		}
 	});
@@ -20,12 +23,12 @@ self.requireAll = function (path, moduleImportHook) {
  */
 self.configureAppPaths = function (appDir, paths) {
 
-	var contextPath = paths.apps + appDir + '/';
+	var contextPath = paths.apps.root + appDir + '/';
 
 	return {
 		root: contextPath,
 		config: contextPath + 'config/',
-		middleware: contextPath + 'config/middleware/',
+		middleware: contextPath + 'middleware/',
 		utils: contextPath + 'utils/',
 		models: contextPath + 'models/',
 		views: contextPath + 'views/',
@@ -34,9 +37,13 @@ self.configureAppPaths = function (appDir, paths) {
 	};
 };
 
+self.getAppConfig = function (config) {
+	return extend(true, config, require(config.paths.app.root + 'config.json')[config.env]);
+}
+
 /*
  *	Order all mounts configured in mounts.json so that '/' is always the final mount point
- *	Mounted sub-app routes will not work if / is mounted first (perhaps a bug in express?)
+ *	Mounted sub-app routes will not work if / is mounted first due to app.use() precedences
  */
 self.sortMounts = function (mounts) {
 
@@ -55,16 +62,15 @@ self.sortMounts = function (mounts) {
 	return mounts;
 }
 
-self.initMount = function (app, host, masterConfig, mongoose) {
+self.initMount = function (app, host, masterConfig) {
 	
-	var extend = require('node.extend'), // deprecated, needs updating
-		config = extend(true, {}, masterConfig);
-	
+	var config = extend(true, {}, masterConfig);
+
 	config.paths.app = self.configureAppPaths(app.directory, config.paths);
 	config.app = app;
 
 	try {
-		host.use(app.path, require(config.paths.app.root + 'app')(config, mongoose));
+		host.use(app.path, require(config.paths.app.root + 'app')(config));
 	} catch (error) {
 		throw(error);
 	}
@@ -75,22 +81,22 @@ self.initMount = function (app, host, masterConfig, mongoose) {
 /* 
  *	Includes all apps defined in /apps.json
  */
-self.getMounts = function (app, config, mongoose) {
+self.getMounts = function (app, config) {
 
-	var mounts = self.sortMounts(require(config.paths.root + '/mounts.json').mounts),
-		mounted = [], appPath, mount, i;
+	var mounted = [], appPath, mount, i;
 
-	for (i = 0; i < mounts.length; i++) {
+	config.mounts = self.sortMounts(config.mounts);
 
-		mount = mounts[i];
-		appPath = config.paths.apps + mount.directory;
+	for (i = 0; i < config.mounts.length; i++) {
+
+		mount = config.mounts[i];
+		appPath = config.paths.apps.root + mount.directory;
 
 		if (mount.directory !== 'shared') {
 			if (fs.lstatSync(appPath).isDirectory()) {
 				if (mounted.indexOf(mount.directory) === -1) {
-					app = self.initMount(mount, app, config, mongoose);
+					app = self.initMount(mount, app, config);
 					mounted.push(mount.directory);
-					console.info('sub-app \'%s\' was successfully mounted! \n', mount.directory);
 				} else {				
 					throw new Error('Unable to mount sub-app: \'' + mount.directory +  '\'. A sub-app with the same name has already been mounted.');
 				}
@@ -98,31 +104,32 @@ self.getMounts = function (app, config, mongoose) {
 		} else {
 			throw new Error('Cannot use \'shared\' directory as a sub-app. Directory: \'shared\' is reserved and can not be included.');
 		}
-
 	};
-
-	return app;
+	
+	if (mounted.length > 0) {
+		app.listen(config.server.port);
+	}
 };
 
 /* 
  *	Loops over all files in a models directory and includes them (invoking .model)
  */
-self.getModels = function (path, config, mongoose, app) {
+self.getModels = function (path, config, db, app) {
 	
 	self.requireAll(path, function () {
-		this.model(config, mongoose, app);
+		this.model(config, db, app);
 	});
 
-	return mongoose;
+	return db;
 };
 
 /* 
  *	Loops over all files in a controllers directory and includes them (invoking .controller)
  */
-self.getControllers = function (app, config, mongoose, context) {
+self.getControllers = function (app, config, db, context) {
 	
 	self.requireAll(config.paths.app.controllers, function () {
-		this.controller(app, config, mongoose, context);
+		this.controller(app, config, db, context);
 	});
 
 	return app;

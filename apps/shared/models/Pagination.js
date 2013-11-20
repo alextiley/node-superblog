@@ -1,8 +1,8 @@
-module.exports.model = function (config, mongoose) {
+module.exports.model = function (config, db) {
 	
 	var constants = require(config.paths.shared.utils + 'constants'),
 		urlUtils = require(config.paths.shared.utils + 'url'),
-		Schema = mongoose.Schema,
+		Schema = require('mongoose').Schema,
 		ObjectId = Schema.Types.ObjectId,
 		PaginationSchema;
 
@@ -52,23 +52,23 @@ module.exports.model = function (config, mongoose) {
 		paging.lastUrl = this.getPageUrl(totalPages, results, baseUrl);
 
 		return paging;
-	}
+	};
 
 	PaginationSchema.statics.calculateTotalPages = function (results, count) {
 		return Math.ceil(count / results);
-	}
+	};
 
 	PaginationSchema.statics.calculateNextPage = function (page, totalPages) {
 		return page < totalPages ? page + 1 : null;
-	}
+	};
 
 	PaginationSchema.statics.calculatePrevPage = function (page) {
 		return page > 1 ? page - 1 : null;
-	}
+	};
 
 	PaginationSchema.statics.calculateFirstPosition = function (page, results) {
 		return ((page - 1) * results) + 1;
-	}
+	};
 
 	PaginationSchema.statics.calculateLastPosition = function (page, results, count) {
 		var lastPosition = page * results;
@@ -76,7 +76,7 @@ module.exports.model = function (config, mongoose) {
 			lastPosition = lastPosition - (lastPosition - count);
 		}
 		return lastPosition;
-	}
+	};
 
 	PaginationSchema.statics.validatePageBoundaries = function (page, totalPages) {
 		if (page > totalPages) {
@@ -85,7 +85,7 @@ module.exports.model = function (config, mongoose) {
 			page = 1;
 		}
 		return page;
-	}
+	};
 
 	PaginationSchema.statics.getPageUrl = function (page, results, baseUrl) {
 
@@ -107,7 +107,7 @@ module.exports.model = function (config, mongoose) {
 		}
 
 		return requestUrl;
-	}
+	};
 
 	PaginationSchema.statics.getPageFromRequest = function (request) {
 		return urlUtils.getNumericQueryParam(request.query[constants.PAGE_PARAM], constants.DEFAULT_PAGE);
@@ -117,5 +117,5 @@ module.exports.model = function (config, mongoose) {
 		return urlUtils.getNumericQueryParam(request.query[constants.RESULTS_PARAM], constants.DEFAULT_RESULTS);
 	};
 
-	mongoose.model('Pagination', PaginationSchema);
+	db.model('Pagination', PaginationSchema);
 };
