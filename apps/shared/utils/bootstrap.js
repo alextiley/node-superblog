@@ -34,6 +34,25 @@ self.configureAppPaths = function (appDir, paths) {
 	};
 };
 
+// This is required to order mounts so that '/' is always the final mount point
+// This is due to how connect mounts routes - sub-app routes will not work if / is mounted first
+// Should probably validate that there's only one mount.path === '/'...	
+self.sortMounts = function (mounts) {
+
+	var rootMount,
+		i;
+
+	for (i = 0; i < mounts.length; i++) {
+		if ((i + 1) !== mounts.length) {
+			if (mounts[i].path === '/') {
+				rootMount = mounts.splice(i, 1)[0];
+				mounts.push(rootMount);
+			}
+		}
+	}
+	return mounts;
+}
+
 /* 
  *	Includes all apps defined in /apps.json
  */
@@ -41,20 +60,9 @@ self.getAllApps = function (mainApp, mainConfig, mongoose) {
 
 	var mounts = require(mainConfig.paths.root + '/mounts.json').mounts,
 		extend = require('node.extend'),
-		rootMount, appPath, config, app, i;
+		appPath, config, app, i;
 	
-	// REFACTOR - this is used to order mounts so that '/' is always the final mount point
-	// This is due to how connect mounts routes - sub-app routes will not work if / is mounted first
-	// Should probably validate that there's only one mount.path === '/'...
-	rootMount = mounts.filter(function (mount) {
-		return mount.path === '/';
-	})[0];
-
-	mounts = mounts.filter(function (mount) {
-		return mount.path !== '/';
-	});
-
-	mounts.push(rootMount);
+	mounts = self.sortMounts(mounts);
 
 	for (i = 0; i < mounts.length; i++) {
 
