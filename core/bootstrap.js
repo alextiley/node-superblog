@@ -1,19 +1,20 @@
 var extend = require('extend'),
+	path = require('path'),
 	fs = require('fs'),
 	self = {};
 
 /* 
  *	Utility method for requiring a collection of .js files
  */
-self.requireAll = function (path, callback) {
+self.requireAll = function (requirePath, callback) {
 		
-	var includeFile;
+	var requireFile;
 
-	fs.readdirSync(path).forEach(function (file) {
+	fs.readdirSync(requirePath).forEach(function (file) {
 		if (file.substr(-3) === '.js') {
-			includeFile = require(path + file);
+			requireFile = require(path.join(requirePath, file));
 			if (typeof callback === 'function') {
-				callback.call(includeFile);
+				callback.call(requireFile);
 			} else {
 				throw new Error('Argument \'callback\' was not supplied or is not a function.');
 			}
@@ -26,17 +27,17 @@ self.requireAll = function (path, callback) {
  */
 self.configureAppPaths = function (appDir, paths) {
 
-	var contextPath = paths.apps.root + appDir + '/';
+	var contextPath = path.join(paths.apps.root, appDir, '/');
 
 	return {
 		root: contextPath,
-		config: contextPath + 'config/',
-		middleware: contextPath + 'middleware/',
-		utils: contextPath + 'utils/',
-		models: contextPath + 'models/',
-		views: contextPath + 'views/',
-		controllers: contextPath + 'controllers/',
-		assets: contextPath + 'views/assets/'
+		config: path.join(contextPath, 'config/'),
+		middleware: path.join(contextPath, 'middleware/'),
+		utils: path.join(contextPath, 'utils/'),
+		models: path.join(contextPath, 'models/'),
+		views: path.join(contextPath, 'views/'),
+		controllers: path.join(contextPath, 'controllers/'),
+		assets: path.join(contextPath, 'views/assets/')
 	};
 };
 
@@ -66,7 +67,7 @@ self.sortMounts = function (mounts) {
  *	from the sub-apps root directory, then returning the merged configuration object.
  */
 self.getAppConfig = function (config) {
-	return extend(true, config, require(config.paths.app.root + 'config.json')[config.env]);
+	return extend(true, config, require(path.join(config.paths.app.root, 'config.json'))[config.env]);
 }
 
 /*
@@ -113,13 +114,13 @@ self.getMounts = function (app, conf) {
 		// Shared cannot be mounted (system reserved)
 		if (mount.directory !== 'shared') {
 			// Ensure the mount path is an existing directory
-			if (fs.lstatSync(conf.paths.apps.root + mount.directory).isDirectory()) {
+			if (fs.lstatSync(path.join(conf.paths.apps.root, mount.directory)).isDirectory()) {
 				// Ensure the current mount isn't already mounted
 				if (mounted.indexOf(mount.directory) === -1) {
 					// Create a new object containing main config + mount specific config
 					thisConf = self.getMountConfig(mount, conf);
 					// Use the mount as a connect middleware
-					app = app.use(mount.path, require(thisConf.paths.app.root + 'app')(thisConf));
+					app = app.use(mount.path, require(path.join(thisConf.paths.app.root, 'app'))(thisConf));
 					// Keep track of mounted paths to avoid duplicates
 					mounted.push(mount.directory);
 				} else {

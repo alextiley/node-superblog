@@ -1,6 +1,7 @@
 module.exports.model = function (config, db) {
 
-	var validators = require(config.paths.shared.utils + 'validation').validators,
+	var path = require('path'),
+		validators = require(path.join(config.paths.shared.utils, 'validation')).validators,
 		Schema = require('mongoose').Schema,
 		crypto = require('crypto'),
 		AdministratorSchema;

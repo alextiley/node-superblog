@@ -1,6 +1,7 @@
 module.exports = function () {
 
-	var utils = {};
+	var path = require('path'),
+		utils = {};
 
 	/*
 	 *  Remove a query string from a URL
@@ -52,7 +53,7 @@ module.exports = function () {
 	 *	path: the path to make absolute
 	 */
 	utils.getAbsolutePath = function (path, config) {
-		return config.paths.app.root + path;
+		return path.join(config.paths.app.root, path);
 	};
 
 	/*

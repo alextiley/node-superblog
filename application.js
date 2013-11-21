@@ -1,16 +1,17 @@
 var env = process.env.NODE_ENV || 'development',
 	express = require('express'),
+	path = require('path'),
 	config = {},
 	bootstrap;
 
 // Environment specific configuration
-config = require(__dirname + '/config.json')[env];
+config = require(path.join(__dirname, '/config.json'))[env];
 
 // Store environment
 config.env = env;
 
 // Get path configuration
-config.paths = require(__dirname + '/core/paths')(__dirname);
+config.paths = require(path.join(__dirname, '/core/paths'))(__dirname);
 
 // Get mount configuration (sub-apps)
 config.mounts = require(config.paths.apps.mounts);

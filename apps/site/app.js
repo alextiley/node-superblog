@@ -3,6 +3,7 @@ module.exports = function (config) {
 	var bootstrap = require(config.paths.core.bootstrap),
 		mongoose = require('mongoose'),
 		express = require('express'),
+		path = require('path'),
 		app = express(),
 		db;
 
@@ -17,7 +18,7 @@ module.exports = function (config) {
 		db = bootstrap.getModels(config.paths.app.models, config, db);
 		
 		// Express configuration
-		app = require(config.paths.app.config + 'express')(app, config);
+		app = require(path.join(config.paths.app.config, 'express'))(app, config);
 
 		// Pull in app specific controllers
 		app = bootstrap.getControllers(config.paths.app.controllers, app, config, db);

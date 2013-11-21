@@ -1,7 +1,8 @@
 module.exports.model = function (config, db) {
 	
-	var constants = require(config.paths.shared.utils + 'constants'),
-		urlUtils = require(config.paths.shared.utils + 'url'),
+	var path = require('path'),
+		constants = require(path.join(config.paths.shared.utils, 'constants')),
+		urlUtils = require(path.join(config.paths.shared.utils, 'url')),
 		Schema = require('mongoose').Schema,
 		ObjectId = Schema.Types.ObjectId,
 		PaginationSchema;

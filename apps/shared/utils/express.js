@@ -1,6 +1,7 @@
 module.exports = function () {
 
-	var utils = {};
+	var path = require('path'),
+		utils = {};
 
 	/*
 	 *	Renders the 500 error template
@@ -11,7 +12,7 @@ module.exports = function () {
 	 */
 	utils.renderErrorPage = function (error, request, response, config) {
 
-		var constants = require(config.paths.shared.utils + 'constants'),
+		var constants = require(path.join(config.paths.shared.utils, 'constants')),
 			status = (error.status || 500).toString();
 
 		response.status(status);

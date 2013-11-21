@@ -1,14 +1,14 @@
 module.exports = function (app, config) {
 
-	var paths = config.paths,
+	var path = require('path'),
 		express = require('express'),
 		passport = require('passport'),
 		flash = require('connect-flash'),
 		mongoStore = require('connect-mongo')(express),
-		urlUtils = require(paths.shared.utils + 'url'),
-		constants = require(paths.shared.utils + 'constants'),
-		expressUtils = require(paths.shared.utils + 'express'),
-		renderOverride = require(paths.shared.middleware + 'renderOverride');
+		urlUtils = require(path.join(config.paths.shared.utils, 'url')),
+		constants = require(path.join(config.paths.shared.utils, 'constants')),
+		expressUtils = require(path.join(config.paths.shared.utils, 'express')),
+		renderOverride = require(path.join(config.paths.shared.middleware, 'renderOverride'));
 
 	// Development-specific configuration
 	app.configure('development', function () {
@@ -25,20 +25,20 @@ module.exports = function (app, config) {
 	app.use(flash());
 
 	// Set the assets path
-	app.use(express.static(paths.app.assets));
+	app.use(express.static(config.paths.app.assets));
 
 	// Set the base directory
 	app.use(function (request, response, next) {
-		app.locals.basedir = paths.app.views;
+		app.locals.basedir = config.paths.app.views;
 		next();
 	});
 
 	// Sets the favicon path (default is an express favicon)
-	app.use(express.favicon(paths.app.assets + 'img/favicon.ico'));
+	app.use(express.favicon(path.join(config.paths.app.assets, 'img/favicon.ico')));
 
 	// Set the base view path
 	app.use(function (request, response, next) {
-		app.set('views', paths.app.views);
+		app.set('views', config.paths.app.views);
 		next();
 	});
 

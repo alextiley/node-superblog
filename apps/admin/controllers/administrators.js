@@ -1,7 +1,8 @@
 module.exports.controller = function (app, config, db) {
 
-	var validation = require(config.paths.shared.utils + 'validation'),
-		auth = require(config.paths.app.utils + 'passport'),
+	var path = require('path'),
+		validation = require(path.join(config.paths.shared.utils, 'validation')),
+		auth = require(path.join(config.paths.app.utils, 'passport')),
 		Administrator = db.model('Administrator');
 
 	// List all administrator accounts

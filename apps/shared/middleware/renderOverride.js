@@ -2,15 +2,16 @@
 // This method overrides the default render method, allowing
 // the addition of common data to all response objects
 
-var self = {};
+var path = require('path'),
+	self = {};
 
 /*
  *	Format a view path into a commonly formatted page ID
  *	view: Passed to the render function, 
  */
-self.getPageIdFromViewPath = function (path) {
+self.getPageIdFromViewPath = function (viewPath) {
 
-	var pageId = path;
+	var pageId = viewPath;
 
 	if (pageId !== undefined) {
 		// Remove relative path parts (../, ./, ./../, etc...)
@@ -50,7 +51,7 @@ self.getHtmlBodyClasses = function (request, view) {
  */
 self.getCommonRouteData = function (view, locals, request, response, config) {
 
-	var constants = require(config.paths.shared.utils + 'constants');
+	var constants = require(path.join(config.paths.shared.utils, 'constants'));
 
 	if (locals === undefined) {
 		locals = {};
