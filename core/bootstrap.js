@@ -2,6 +2,9 @@ var extend = require('extend'),
 	fs = require('fs'),
 	self = {};
 
+/* 
+ *	Utility method for requiring a collection of .js files
+ */
 self.requireAll = function (path, callback) {
 		
 	var includeFile;
@@ -37,10 +40,6 @@ self.configureAppPaths = function (appDir, paths) {
 	};
 };
 
-self.getAppConfig = function (config) {
-	return extend(true, config, require(config.paths.app.root + 'config.json')[config.env]);
-}
-
 /*
  *	Order all mounts configured in mounts.json so that '/' is always the final mount point
  *	Mounted sub-app routes will not work if / is mounted first due to app.use() precedences
@@ -62,42 +61,68 @@ self.sortMounts = function (mounts) {
 	return mounts;
 }
 
-self.initMount = function (app, host, masterConfig) {
+/*
+ *	Given a configuration object, this method will merge all properties of a config.json file
+ *	from the sub-apps root directory, then returning the merged configuration object.
+ */
+self.getAppConfig = function (config) {
+	return extend(true, config, require(config.paths.app.root + 'config.json')[config.env]);
+}
+
+/*
+ *	This method serves a few purposes:
+ *		1. Creates a deep clone of the master config object for mount specific config
+ *		2. Pulls in path configuration for this mount, adding the 'app' property to the paths object
+ *		3. Adds the current mount to the config object, by adding the 'app' property to the root object
+ *		4. Pulls in app specific config (config.json in the mount folder) where it exists
+ */
+self.getMountConfig = function (mount, masterConfig) {
 	
-	var config = extend(true, {}, masterConfig);
+	var config = extend(true, {}, masterConfig),
+		appConfig;
 
-	config.paths.app = self.configureAppPaths(app.directory, config.paths);
-	config.app = app;
-
+	config.paths.app = self.configureAppPaths(mount.directory, config.paths);
+	config.app = mount;
+		
 	try {
-		host.use(app.path, require(config.paths.app.root + 'app')(config));
+		config = self.getAppConfig(config);
 	} catch (error) {
-		throw(error);
+		console.info('No app specific configuration detected in ' + config.paths.app.root + '. To enable this feature, add a config.json file to this path and invoke config = bootstrap.getAppConfig(config);');
 	}
 
-	return host;
-};
+	return config;
+}
 
 /* 
- *	Includes all apps defined in /apps.json
+ *	Includes all apps defined in /mounts.json
  */
-self.getMounts = function (app, config) {
+self.getMounts = function (app, conf) {
 
-	var mounted = [], appPath, mount, i;
+	var initialMountCount = app.stack.length,
+		mounted = [],
+		thisConf, 
+		mount,
+		i;
 
-	config.mounts = self.sortMounts(config.mounts);
+	conf.mounts = self.sortMounts(conf.mounts);
 
-	for (i = 0; i < config.mounts.length; i++) {
+	for (i = 0; i < conf.mounts.length; i++) {
 
-		mount = config.mounts[i];
-		appPath = config.paths.apps.root + mount.directory;
+		mount = conf.mounts[i];
 
+		// Shared cannot be mounted (system reserved)
 		if (mount.directory !== 'shared') {
-			if (fs.lstatSync(appPath).isDirectory()) {
+			// Ensure the mount path is an existing directory
+			if (fs.lstatSync(conf.paths.apps.root + mount.directory).isDirectory()) {
+				// Ensure the current mount isn't already mounted
 				if (mounted.indexOf(mount.directory) === -1) {
-					app = self.initMount(mount, app, config);
+					// Create a new object containing main config + mount specific config
+					thisConf = self.getMountConfig(mount, conf);
+					// Use the mount as a connect middleware
+					app = app.use(mount.path, require(thisConf.paths.app.root + 'app')(thisConf));
+					// Keep track of mounted paths to avoid duplicates
 					mounted.push(mount.directory);
-				} else {				
+				} else {
 					throw new Error('Unable to mount sub-app: \'' + mount.directory +  '\'. A sub-app with the same name has already been mounted.');
 				}
 			}
@@ -105,19 +130,24 @@ self.getMounts = function (app, config) {
 			throw new Error('Cannot use \'shared\' directory as a sub-app. Directory: \'shared\' is reserved and can not be included.');
 		}
 	};
-	
-	if (mounted.length > 0) {
-		app.listen(config.server.port);
+
+	// Only start the server if apps have been mounted
+	if (app.stack.length > initialMountCount) {
+		app.listen(conf.server.port);
 	}
 };
 
 /* 
  *	Loops over all files in a models directory and includes them (invoking .model)
+ *	Arguments:
+ *		path - the path that include multiple controllers - all .js files here will be included
+ *		config [optional] - the configuration object for this app
+ *		db [optional] - the database connection to pass to your model
  */
-self.getModels = function (path, config, db, app) {
+self.getModels = function (path, config, db) {
 	
 	self.requireAll(path, function () {
-		this.model(config, db, app);
+		this.model(config, db);
 	});
 
 	return db;
@@ -125,10 +155,15 @@ self.getModels = function (path, config, db, app) {
 
 /* 
  *	Loops over all files in a controllers directory and includes them (invoking .controller)
+ *	Arguments:
+ *		path - the path that include multiple controllers - all .js files here will be included
+ *		app [optional] - the express application to pass to the controller
+ *		config [optional] - the configuration object for this app
+ *		db [optional] - the database connection to pass to your controller
  */
-self.getControllers = function (app, config, db) {
+self.getControllers = function (path, app, config, db) {
 	
-	self.requireAll(config.paths.app.controllers, function () {
+	self.requireAll(path, function () {
 		this.controller(app, config, db);
 	});
 

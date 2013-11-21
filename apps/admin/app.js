@@ -6,19 +6,15 @@ module.exports = function (config) {
 		app = express(),
 		db;
 
-	// Application specific configuration
-	config = bootstrap.getAppConfig(config);
-
 	// Create a mongodb connection
 	db = mongoose.createConnection(config.db.url, function (error) {
 		if (error) throw error;
 	});
 
 	db.once('open', function () {
-		
 		// Pull in common and app specific models
 		db = bootstrap.getModels(config.paths.shared.models, config, db);
-		db = bootstrap.getModels(config.paths.app.models, config, db, app);
+		db = bootstrap.getModels(config.paths.app.models, config, db);
 		
 		// Express configuration
 		app = require(config.paths.app.config + 'express')(app, config);
@@ -27,8 +23,7 @@ module.exports = function (config) {
 		require(config.paths.app.config + 'passport')(config, db);
 
 		// Pull in app specific controllers
-		app = bootstrap.getControllers(app, config, db);
-
+		app = bootstrap.getControllers(config.paths.app.controllers, app, config, db);
 	});
 
 	return app;
