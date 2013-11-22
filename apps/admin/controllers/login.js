@@ -1,14 +1,15 @@
 module.exports.controller = function (app, config, db) {
 
-	var path = require('path'),
-		auth = require(path.join(config.paths.app.utils, 'passport'));
+	var Administrator = db.model('Administrator'),
+		path = require('path');
 
 	app.get('/', function (request, response) {
 		response.redirect('login');
 	});
 
 	app.get('/login', function (request, response, next) {
-		auth.ensureAuthenticated(request, response, {
+		
+		Administrator.isAuthenticated(request, response, {
 			success: function () {
 				response.redirect('dashboard');
 			},
@@ -16,10 +17,12 @@ module.exports.controller = function (app, config, db) {
 				response.render('login');
 			}
 		});
+
 	});
 
 	app.post('/login', function (request, response, next) {
-		auth.authoriseLogin(request, response, next, {
+		
+		Administrator.authenticate(request, response, next, {
 			success: function (user) {
 
 				var successRedirect = 'dashboard';
@@ -37,6 +40,7 @@ module.exports.controller = function (app, config, db) {
 				response.redirect('login');
 			}
 		});
+
 	});
 
 };

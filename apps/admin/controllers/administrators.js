@@ -1,13 +1,12 @@
 module.exports.controller = function (app, config, db) {
 
 	var path = require('path'),
-		validation = require(path.join(config.paths.shared.utils, 'validation')),
-		auth = require(path.join(config.paths.app.utils, 'passport')),
-		Administrator = db.model('Administrator');
+		Administrator = db.model('Administrator'),
+		validation = require(path.join(config.paths.shared.utils, 'validation'));
 
 	// List all administrator accounts
 	app.get('/administrators', function (request, response, next) {
-		auth.ensureAuthenticated(request, response, {
+		Administrator.isAuthenticated(request, response, {
 			success: function () {
 				Administrator.getAll(function (error, administrators) {
 					if (error) {
@@ -23,7 +22,7 @@ module.exports.controller = function (app, config, db) {
 
 	// Create new administrator account page (GET)
 	app.get('/administrators/create', function (request, response, next) {
-		auth.ensureAuthenticated(request, response, {
+		Administrator.isAuthenticated(request, response, {
 			success: function () {
 				response.render('administrator_create');
 			}
@@ -32,7 +31,7 @@ module.exports.controller = function (app, config, db) {
 
 	// Create a new administrator account (POST)
 	app.post('/administrators/create', function (request, response, next) {
-		auth.ensureAuthenticated(request, response, {
+		Administrator.isAuthenticated(request, response, {
 			success: function () {
 				Administrator.create(request, response, function (mongooseError, administrator) {
 					if (mongooseError) {
@@ -49,7 +48,7 @@ module.exports.controller = function (app, config, db) {
 
 	// Delete an existing administrator account
 	app.delete('/administrators/delete/:id', function (request, response, next) {
-		auth.ensureAuthenticated(request, response, {
+		Administrator.isAuthenticated(request, response, {
 			success: function () {
 				
 			}
@@ -58,7 +57,7 @@ module.exports.controller = function (app, config, db) {
 
 	// Update an administrator account
 	app.put('/administrators/update/:id', function (request, response, next) {
-		auth.ensureAuthenticated(request, response, {
+		Administrator.isAuthenticated(request, response, {
 			success: function () {
 				
 			}

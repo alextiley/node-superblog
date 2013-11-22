@@ -1,10 +1,10 @@
 module.exports.controller = function (app, config, db) {
 
-	var path = require('path'),
-		auth = require(path.join(config.paths.app.utils, 'passport'));
+	var Administrator = db.model('Administrator'),
+		path = require('path');
 
 	app.get('/dashboard', function (request, response, next) {
-		auth.ensureAuthenticated(request, response, {
+		Administrator.isAuthenticated(request, response, {
 			success: function () {
 				response.render('dashboard');
 			}

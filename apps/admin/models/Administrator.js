@@ -3,6 +3,7 @@ module.exports.model = function (config, db) {
 	var path = require('path'),
 		validators = require(path.join(config.paths.shared.utils, 'validation')).validators,
 		Schema = require('mongoose').Schema,
+		passport = require('passport'),
 		crypto = require('crypto'),
 		AdministratorSchema;
 
@@ -57,8 +58,12 @@ module.exports.model = function (config, db) {
 		}
 	});
 
-	// Before saving the administrator, ensure that a new hash is generated
-	// with a unique salt. Also store the salt for retrieval later.
+	/*
+	 *	Administrator pre-save middleware
+	 *
+	 *	Before saving the administrator, ensure that a new hash is generated
+	 *	with a unique salt. Also store the salt for retrieval later.
+	 */
 	AdministratorSchema.pre('save', function (next) {
 		
 		var self = this,
@@ -133,6 +138,46 @@ module.exports.model = function (config, db) {
 			callback.call(administrator, error, administrator);
 		});
 
+	};
+
+	/*
+	 *	When executed the passport.authenticate looks for a 'username' and 'password' in the request object.
+	 *	If invokes the local strategy set up in config/passport.js which checks if the credentials match in the db.
+	 *	If an administrator is found and credentials match, the success callback is executed.
+	 */
+	AdministratorSchema.statics.authenticate = function (request, response, next, callbacks) {
+		passport.authenticate('local', function (error, administrator, info) {
+			if (error) {
+				return next(error);
+			}
+			if (!administrator) {
+				return callbacks.failure(administrator, info);
+			}
+			request.logIn(administrator, function (error) {
+				if (error) {
+					return next(error);
+				}
+				return callbacks.success(administrator, info);
+			});
+		})(request, response, next);
+	};
+
+	/*
+	 *	Checks if the admin user is authenticated, then fires the relevant callback method
+	 */
+	AdministratorSchema.statics.isAuthenticated = function (request, response, callbacks) {
+		
+		if (request.isAuthenticated()) {
+			callbacks.success.call()
+		} else {
+			if (typeof callbacks.failure === 'function') {
+				callbacks.failure.call();
+			} else {
+				request.session.originalUrl = request.originalUrl;
+				request.flash('info', 'Please log in to continue.');
+				response.redirect('/admin/login');
+			}
+		}
 	};
 
 	AdministratorSchema.statics.create = function (request, response, callback) {
