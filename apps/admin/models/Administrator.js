@@ -162,24 +162,6 @@ module.exports.model = function (config, db) {
 		})(request, response, next);
 	};
 
-	/*
-	 *	Checks if the admin user is authenticated, then fires the relevant callback method
-	 */
-	AdministratorSchema.statics.isAuthenticated = function (request, response, callbacks) {
-		
-		if (request.isAuthenticated()) {
-			callbacks.success.call()
-		} else {
-			if (typeof callbacks.failure === 'function') {
-				callbacks.failure.call();
-			} else {
-				request.session.originalUrl = request.originalUrl;
-				request.flash('info', 'Please log in to continue.');
-				response.redirect('/admin/login');
-			}
-		}
-	};
-
 	AdministratorSchema.statics.create = function (request, response, callback) {
 		
 		var administrator = new this(request.body);

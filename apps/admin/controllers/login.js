@@ -8,20 +8,11 @@ module.exports.controller = function (app, config, db) {
 	});
 
 	app.get('/login', function (request, response, next) {
-		
-		Administrator.isAuthenticated(request, response, {
-			success: function () {
-				response.redirect('dashboard');
-			},
-			failure: function () {
-				response.render('login');
-			}
-		});
-
+		response.render('login');
 	});
 
 	app.post('/login', function (request, response, next) {
-		
+
 		Administrator.authenticate(request, response, next, {
 			success: function (user) {
 
