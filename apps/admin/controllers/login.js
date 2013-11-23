@@ -1,7 +1,8 @@
 module.exports.controller = function (app, config, db) {
 
-	var Administrator = db.model('Administrator'),
-		path = require('path');
+	var path = require('path'),
+		Administrator = db.model('Administrator'),
+		constants = require(path.join(config.paths.shared.utils, 'constants'));
 
 	app.get('/', function (request, response) {
 		response.redirect('login');
@@ -23,11 +24,11 @@ module.exports.controller = function (app, config, db) {
 					delete(request.session.originalUrl);
 				}
 				
-				request.flash('success', 'Welcome ' + user.name + '! You have successfully logged in.');
+				request.flash(constants.FLASH_SUCCESS, 'Welcome ' + user.name + '! You have successfully logged in.');
 				response.redirect(successRedirect);
 			},
 			failure: function () {
-				request.flash('error', 'Please enter a valid username and password.');
+				request.flash(constants.FLASH_ERROR, 'Please enter a valid username and password.');
 				response.redirect('login');
 			}
 		});

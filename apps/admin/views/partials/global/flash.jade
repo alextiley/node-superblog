@@ -34,3 +34,14 @@
 					each message in messages.success
 						li #{message}
 			- }
+
+- if (messages.warnings !== undefined)
+	- if (messages.warnings.length > 0)
+		.alert.alert-warning
+			- if (messages.warnings.length === 1) {
+				p.message #{messages.warnings[0]}
+			- } else {
+				ul.messages
+					each message in messages.warnings
+						li #{message}
+			- }

@@ -2,6 +2,7 @@ module.exports.controller = function (app, config, db) {
 
 	var path = require('path'),
 		Administrator = db.model('Administrator'),
+		constants = require(path.join(config.paths.shared.utils, 'constants')),
 		validation = require(path.join(config.paths.shared.utils, 'validation'));
 
 	// List all administrator accounts
@@ -25,10 +26,10 @@ module.exports.controller = function (app, config, db) {
 	app.post('/administrators/create', function (request, response, next) {
 		Administrator.create(request, response, function (mongooseError, administrator) {
 			if (mongooseError) {
-				request.flash('error', validation.utils.getMongooseFlashErrors(request, mongooseError));
+				request.flash(constants.FLASH_ERROR, validation.utils.getMongooseFlashErrors(request, mongooseError));
 				response.redirect('administrators/create');
 			} else {
-				request.flash('success', 'The administrator \'' + administrator.username + '\' was successfully created.');
+				request.flash(constants.FLASH_SUCCESS, 'The administrator \'' + administrator.username + '\' was successfully created.');
 				response.redirect('administrators');
 			}
 		});

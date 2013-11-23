@@ -6,7 +6,7 @@ module.exports = {
 	PAGE_PARAM: 'page',
 	RESULTS_PARAM: 'results',
 	FLASH_SUCCESS: 'success',
-	FLASH_ERROR: 'error',
+	FLASH_ERROR: 'errors',
 	FLASH_INFO: 'info',
-	FLASH_WARNING: 'warning'
+	FLASH_WARNING: 'warnings'
 };
