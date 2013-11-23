@@ -65,7 +65,9 @@ module.exports = function (app, config) {
 	app.use(passport.session());
 
 	// Handle user authentication
-	app.use(require(path.join(config.paths.app.middleware, 'authentication')));
+	app.use(function (request, response, next) {
+		require(path.join(config.paths.app.middleware, 'authentication'))(request, response, next, config);
+	});
 
 	// Include common view data, invoked on all route requests
 	app.use(renderOverride.requests(config));
