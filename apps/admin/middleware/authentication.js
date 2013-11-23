@@ -7,14 +7,15 @@ module.exports = function (request, response, next, config) {
 
 	var path = require('path'),
 		constants = require(path.join(config.paths.shared.utils, 'constants')),
-		logInUrl = /^\/(login(\/)?)?([\?|#].*)?$/,
-		logOutUrl = /^\/logout(\/)?([\?|#].*)?$/;
+		login = request.url.match(/^\/(login(\/)?)?([\?|#].*)?$/),
+		logout = request.url.match(/^\/logout(\/)?([\?|#].*)?$/),
+		authorised = request.isAuthenticated();
 	/*
 	 *	Authenticated users: login requests should forward to dashboard
 	 *	- All other requests should go to the next route in the stack
 	 */
-	if (request.isAuthenticated()) {
-		if (request.url.match(logInUrl)) {
+	if (authorised) {
+		if (login) {
 			return response.redirect('dashboard');
 		}
 		return next();
@@ -26,9 +27,9 @@ module.exports = function (request, response, next, config) {
 	 *	- On other requests, store request URL in session for redirect after login
 	 *	- When logout request, bypass rule above (don't store request url in session)
 	 */
-	if (request.url.match(logInUrl)) {
+	if (login) {
 		return next();
-	} else if (!request.url.match(logOutUrl)) {
+	} else if (!logout) {
 		request.session.originalUrl = request.originalUrl;
 		request.flash(constants.FLASH_INFO, 'Please log in to continue.');
 	}
