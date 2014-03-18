@@ -16,7 +16,8 @@
 		"connect-flash": "latest",
 		"jade": "latest",
 		"passport": "latest",
-		"passport-local": "latest"
+		"passport-local": "latest",
+		"i18n-abide": "latest"
 	},
 	"contributors": {
 		"name": "Alex Tiley",

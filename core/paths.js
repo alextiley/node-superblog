@@ -21,6 +21,7 @@ module.exports = function (root) {
 	paths.shared.views = path.join(paths.shared.root, 'views/');
 	paths.shared.controllers = path.join(paths.shared.root, 'controllers/');
 	paths.shared.assets = path.join(paths.shared.views, 'assets/');
+	paths.shared.locale = path.join(paths.shared.assets, 'locale/');
 
 	return paths;
 };

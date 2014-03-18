@@ -37,7 +37,8 @@ self.configureAppPaths = function (appDir, paths) {
 		models: path.join(contextPath, 'models/'),
 		views: path.join(contextPath, 'views/'),
 		controllers: path.join(contextPath, 'controllers/'),
-		assets: path.join(contextPath, 'views/assets/')
+		assets: path.join(contextPath, 'views/assets/'),
+		locale: path.join(contextPath, 'views/assets/locale/')
 	};
 };
 

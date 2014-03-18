@@ -13,6 +13,7 @@ module.exports = function (config) {
 	});
 
 	db.once('open', function () {
+
 		// Pull in common and app specific models
 		db = bootstrap.getModels(config.paths.shared.models, config, db);
 		db = bootstrap.getModels(config.paths.app.models, config, db);

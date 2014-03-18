@@ -2,6 +2,7 @@ module.exports = function (app, config) {
 	
 	var path = require('path'),
 		express = require('express'),
+		i18n = require('i18n-abide'),
 		urlUtils = require(path.join(config.paths.shared.utils, 'url')),
 		constants = require(path.join(config.paths.shared.utils,'constants')),
 		expressUtils = require(path.join(config.paths.shared.utils, 'express')),
@@ -20,6 +21,14 @@ module.exports = function (app, config) {
 
 	// Set the assets path
 	app.use(express.static(config.paths.app.assets));
+
+	// Internationalization
+	app.use(i18n.abide({
+		supported_languages: ['en-GB'],
+		default_lang: 'en-GB',
+		translation_directory: config.paths.app.locale,
+		gettext_alias: 'message'
+	}));
 
 	// Set the base directory
 	app.use(function (request, response, next) {

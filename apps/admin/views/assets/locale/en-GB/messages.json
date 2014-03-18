@@ -1,0 +1,4 @@
+{
+	"login.sucess": "Welcome '{0}'! You have successfully logged in.",
+	"login.failure": "Please enter a valid username and password."
+}
